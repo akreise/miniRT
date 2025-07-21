@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: pshcherb <pshcherb@student.42.fr>          +#+  +:+       +#+         #
+#    By: akreise <akreise@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/06 10:54:27 by pshcherb          #+#    #+#              #
-#    Updated: 2025/05/12 14:42:20 by pshcherb         ###   ########.fr        #
+#    Updated: 2025/07/21 17:02:58 by akreise          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,27 +17,40 @@ SRC = src/parser/read_rt_file.c \
 		src/parser/id_element.c \
 		src/parser/parse_objects.c \
 		src/parser/parse_ambient.c \
-		src/parser/parsing_utils.c \
+		src/init/init_mlx.c \
 		src/math/vec3_add_sub.c \
 		src/math/vec3_dot_cross.c \
 		src/math/vec3_scalar_normal.c \
+		src/math/intersect_sphere.c \
+		src/math/intersect_cylinder.c \
+		src/math/intersect_plane.c \
+		src/math/ray.c \
+		src/scene/light/color_combine.c \
+		src/scene/light/lighting_calculation.c \
+		src/scene/light/trace_ray.c \
+		src/utils/intersect_utils.c \
+		src/utils/parsing_utils.c \
+		src/render/render.c \
 		main.c \
 
 LIBFT = libft/libft.a
+MLX_DIR = ./mlx/minilibx-linux
+MLX_FLAGS = -L$(MLX_DIR) -lmlx -lX11 -lXext -lbsd
+INCLUDES = -I$(MLX_DIR)
 
 OBJ = $(SRC:.c=.o)
-
 DEPS = $(SRC:.c=.d)
 
 all: $(NAME)
 
 $(NAME): Makefile $(OBJ) $(LIBFT)
-	$(CC) $(CFLAGS) $(OBJ) $(LIBFT) -lm -o $(NAME) 
+	@$(MAKE) -C $(MLX_DIR) --no-print-directory
+	$(CC) $(CFLAGS) $(OBJ) $(LIBFT) $(MLX_FLAGS) -lm -o $(NAME) 
 
 -include $(DEPS)
 
 %.o: %.c
-	$(CC) $(CFLAGS) -MMD -c $< -o $@
+	$(CC) $(CFLAGS) $(INCLUDES) -MMD -c $< -o $@
 
 $(LIBFT):
 	make -C libft
@@ -49,6 +62,7 @@ fclean: clean
 clean:
 	rm -f $(OBJ) $(DEPS)
 	make clean -C libft
+	@make clean -C $(MLX_DIR)
 
 re: fclean all
 

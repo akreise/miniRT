@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   miniRT.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pshcherb <pshcherb@student.42.fr>          +#+  +:+       +#+        */
+/*   By: akreise <akreise@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 10:55:51 by pshcherb          #+#    #+#             */
-/*   Updated: 2025/05/26 17:39:40 by pshcherb         ###   ########.fr       */
+/*   Updated: 2025/07/21 16:56:18 by akreise          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 
 # include "parser.h"
 # include "math_utils.h"
+# include "../mlx/minilibx-linux/mlx.h"
 
 typedef struct  s_light_c
 {
@@ -29,6 +30,13 @@ typedef struct  s_light_c
 	double	intensity;
 	t_color	diffuse;
 }   t_light_c;
+
+typedef struct s_mlx_data {
+    void    *mlx_ptr;
+    void    *win_ptr;
+    t_image img;
+    t_scene *scene;
+} t_mlx_data;
 
 // color_combine.c
 t_color color_scale(t_color color, double factor);
@@ -44,5 +52,11 @@ void    trace_sphere(t_color *color, double *closest, t_ray ray, t_scene *scene)
 void    trace_plane(t_color *color, double *closest, t_ray ray, t_scene *scene);
 void    trace_cylinders(t_color *color, double *closest, t_ray ray, t_scene *scene);
 t_vec3	get_cylinder_normal(t_cylinder *cy, t_vec3 hit);
+
+// init
+t_image	init_image(void *mlx);
+int 	color_to_int(t_color color);
+void	put_pixel(t_image *img, int x, int y, int color);
+void 	initialize_scene(t_scene *scene);
 
 #endif

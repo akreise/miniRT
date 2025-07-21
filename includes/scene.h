@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   scene.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pshcherb <pshcherb@student.42.fr>          +#+  +:+       +#+        */
+/*   By: akreise <akreise@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 10:56:38 by pshcherb          #+#    #+#             */
-/*   Updated: 2025/05/12 12:37:16 by pshcherb         ###   ########.fr       */
+/*   Updated: 2025/07/13 16:02:17 by akreise          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,5 +74,13 @@ typedef struct s_scene {
 	t_plane      *planes;
 	t_cylinder   *cylinders;
 } t_scene;
+
+typedef struct s_image {
+	void	*img;
+	char	*addr;
+	int		bpp;
+	int		line_length;
+	int		endian;
+}	t_image;
 
 #endif

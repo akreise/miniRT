@@ -6,11 +6,12 @@
 /*   By: akreise <akreise@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 11:49:06 by pshcherb          #+#    #+#             */
-/*   Updated: 2025/07/20 19:25:41 by akreise          ###   ########.fr       */
+/*   Updated: 2025/07/23 17:09:48 by akreise          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/parser.h"
+#include "../../includes/math_utils.h"
 
 // Обработка строки с параметрами Ambient light из .rt файла
 // Формат строки: A <ratio> <R,G,B>
@@ -54,12 +55,12 @@ int	handle_camera(char **tokens, t_scene *scene)
 		return (ft_printf("Error: Missing parameters for Camera\n"), 0);
 	scene->camera.position = parse_vec3(tokens[1]);// Парсинг позиции камеры из строки в вектор
 	scene->camera.orientation = parse_vec3(tokens[2]);// Парсинг ориентации камеры (направления взгляда)
-	// Проверка, что вектор ориентации нормализован (длина близка к 1)
-	if (fabs(vec3_length(scene->camera.orientation) - 1.0) > 0.001)
+	if (vec3_length(scene->camera.orientation) == 0.0)
 	{
-		ft_printf("Error: Camera orientation vector is not normalized");
+		ft_printf("Error: Camera orientation vector cannot be zero\n");
 		return (0);
 	}
+	scene->camera.orientation = vec3_normalize(scene->camera.orientation);
 	scene->camera.fov = ft_atof(tokens[3]);	// Парсинг угла обзора (FOV)
 	if (scene->camera.fov <= 0 || scene->camera.fov >= 180)// Проверка корректности угла обзора (от 0 до 180 гр)
 	{

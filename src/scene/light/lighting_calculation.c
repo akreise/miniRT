@@ -6,7 +6,7 @@
 /*   By: akreise <akreise@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 10:48:07 by pshcherb          #+#    #+#             */
-/*   Updated: 2025/07/20 19:52:09 by akreise          ###   ########.fr       */
+/*   Updated: 2025/07/23 15:52:57 by akreise          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,8 @@ t_color	compute_lighting(t_vec3 hit_point, t_vec3 normal, t_color obj_color,
 	t_light_c	l;
 
 	// Ambient lighting: масштабируем ambient color сцены по коэффициенту
-	l.ambient = color_scale(scene->ambient.color, scene->ambient.ratio);
+	t_color ambient_color = color_mul(obj_color, scene->ambient.color);
+	l.ambient = color_scale(ambient_color, scene->ambient.ratio);
 	l.diffuse_total = (t_color){0, 0, 0};// Начальное значение для диффузного освещения — чёрный
 	l.light = scene->lights;// Проходим по всем источникам света
 	while (l.light)

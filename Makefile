@@ -6,7 +6,7 @@
 #    By: akreise <akreise@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/06 10:54:27 by pshcherb          #+#    #+#              #
-#    Updated: 2025/07/21 17:02:58 by akreise          ###   ########.fr        #
+#    Updated: 2025/07/23 17:24:38 by akreise          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -31,6 +31,7 @@ SRC = src/parser/read_rt_file.c \
 		src/utils/intersect_utils.c \
 		src/utils/parsing_utils.c \
 		src/render/render.c \
+		check.c \
 		main.c \
 
 LIBFT = libft/libft.a

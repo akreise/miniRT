@@ -6,7 +6,7 @@
 /*   By: akreise <akreise@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 10:55:51 by pshcherb          #+#    #+#             */
-/*   Updated: 2025/07/21 16:56:18 by akreise          ###   ########.fr       */
+/*   Updated: 2025/07/23 17:39:16 by akreise          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ typedef struct s_mlx_data {
 // color_combine.c
 t_color color_scale(t_color color, double factor);
 t_color color_add(t_color a, t_color b);
+t_color color_mul(t_color a, t_color b);
 
 // lightning_calculations.c
 t_color	compute_lighting(t_vec3 hit_point, t_vec3 normal, t_color obj_color,
@@ -58,5 +59,12 @@ t_image	init_image(void *mlx);
 int 	color_to_int(t_color color);
 void	put_pixel(t_image *img, int x, int y, int color);
 void 	initialize_scene(t_scene *scene);
+
+//check
+int has_rt_extension(const char *filename);
+int is_file_empty(const char *filename);
+int validate_scene(t_scene *scene);
+int validate_line_tokens(char **tokens);
+int check_rt_file(const char *filename);
 
 #endif

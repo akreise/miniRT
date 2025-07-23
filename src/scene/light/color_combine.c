@@ -6,7 +6,7 @@
 /*   By: akreise <akreise@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 10:42:09 by pshcherb          #+#    #+#             */
-/*   Updated: 2025/07/20 19:48:53 by akreise          ###   ########.fr       */
+/*   Updated: 2025/07/23 15:52:15 by akreise          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,16 @@ t_color	color_scale(t_color color, double factor)
 	result.b = fmin(color.b * factor, 255);// И синего
 	return (result);
 }
+
+t_color color_mul(t_color a, t_color b)
+{
+    return (t_color){
+        (a.r * b.r) / 255.0,
+        (a.g * b.g) / 255.0,
+        (a.b * b.b) / 255.0
+    };
+}
+
 //t_color base = {200, 100, 50};
 //t_color ambient = color_scale(base, 0.2); // → {40, 20, 10}
 

@@ -6,7 +6,7 @@
 /*   By: pshcherb <pshcherb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 15:22:38 by pshcherb          #+#    #+#             */
-/*   Updated: 2025/05/15 17:14:55 by pshcherb         ###   ########.fr       */
+/*   Updated: 2025/07/24 15:50:57 by pshcherb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,11 @@ bool	intersect_plane(t_ray ray, t_plane *plane, double *t)
 {
 	t_plane_i	p;
 
+	// Initialize the members of p to default values
+    p.valid = false; // Set valid to false initially
+    p.denom = 0;     // Initialize denom (this is typically used to check if the ray is parallel to the plane)
+    p.t = 0;         // Initialize t
+    p.point_to_origin = vec3_sub(ray.origin, plane->point); // Assuming 'plane->point' is the plane's reference point
 	p = init_plane_i(ray, plane, p);
 	if (!p.valid)
 		return (false);

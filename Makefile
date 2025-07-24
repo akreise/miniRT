@@ -3,16 +3,17 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: akreise <akreise@student.42.fr>            +#+  +:+       +#+         #
+#    By: pshcherb <pshcherb@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/06 10:54:27 by pshcherb          #+#    #+#              #
-#    Updated: 2025/07/23 17:24:38 by akreise          ###   ########.fr        #
+#    Updated: 2025/07/24 16:20:56 by pshcherb         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = miniRT
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror 
+CFLAGS += -Wall -Wextra -Werror -I/usr/local/include -I$(MLX_DIR) $(shell pkg-config --cflags x11)
+LDFLAGS += -L$(MLX_DIR) -lmlx -L/usr/X11/lib -lX11 -lXext  -lm -L/opt/homebrew/opt/libbsd/lib -lbsd $(shell pkg-config --libs x11) # Убрал -L/usr/local/lib
 SRC = src/parser/read_rt_file.c \
 		src/parser/id_element.c \
 		src/parser/parse_objects.c \
@@ -36,7 +37,7 @@ SRC = src/parser/read_rt_file.c \
 
 LIBFT = libft/libft.a
 MLX_DIR = ./mlx/minilibx-linux
-MLX_FLAGS = -L$(MLX_DIR) -lmlx -lX11 -lXext -lbsd
+MLX_FLAGS = -L$(MLX_DIR) -lmlx -lX11 -lXext # Возможно, стоит убрать X11 здесь, так как оно уже есть в LDFLAGS
 INCLUDES = -I$(MLX_DIR)
 
 OBJ = $(SRC:.c=.o)
@@ -46,7 +47,7 @@ all: $(NAME)
 
 $(NAME): Makefile $(OBJ) $(LIBFT)
 	@$(MAKE) -C $(MLX_DIR) --no-print-directory
-	$(CC) $(CFLAGS) $(OBJ) $(LIBFT) $(MLX_FLAGS) -lm -o $(NAME) 
+	$(CC) $(CFLAGS) $(OBJ) $(LIBFT) $(LDFLAGS) -o $(NAME)
 
 -include $(DEPS)
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   intersect_sphere.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: akreise <akreise@student.42.fr>            +#+  +:+       +#+        */
+/*   By: pshcherb <pshcherb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 15:22:22 by pshcherb          #+#    #+#             */
-/*   Updated: 2025/07/19 19:42:21 by akreise          ###   ########.fr       */
+/*   Updated: 2025/07/24 15:50:18 by pshcherb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,14 @@ bool	intersect_sphere(t_ray ray, t_sphere *sphere, double *t)
 {
 	t_sphere_i	s;
 
+	 // Initialize the members of s to default values
+    s.valid = 0; // Set valid to false initially
+    s.a = 0; // Initialize other members as necessary
+    s.b = 0;
+    s.c = 0;
+    s.discriminant = 0;
+    s.t0 = 0;
+    s.t1 = 0;
 	s = init_sphere_i(ray, sphere, s);// Сначала считаем всё, что нужно для пересечения
 	if (!s.valid)// Если нет пересечения — возвращаем false
 		return (false);

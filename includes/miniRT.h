@@ -6,7 +6,7 @@
 /*   By: akreise <akreise@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 10:55:51 by pshcherb          #+#    #+#             */
-/*   Updated: 2025/07/23 17:39:16 by akreise          ###   ########.fr       */
+/*   Updated: 2025/07/29 16:38:18 by akreise          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 
 # include "parser.h"
 # include "math_utils.h"
+# include "scene.h"
 # include "../mlx/minilibx-linux/mlx.h"
 
 typedef struct  s_light_c
@@ -35,8 +36,14 @@ typedef struct s_mlx_data {
     void    *mlx_ptr;
     void    *win_ptr;
     t_image img;
-    t_scene *scene;
+    //t_scene *scene;
 } t_mlx_data;
+
+typedef struct s_app
+{
+    t_mlx_data mlx_data;
+    t_scene    scene;
+} t_app;
 
 // color_combine.c
 t_color color_scale(t_color color, double factor);
@@ -61,10 +68,14 @@ void	put_pixel(t_image *img, int x, int y, int color);
 void 	initialize_scene(t_scene *scene);
 
 //check
-int has_rt_extension(const char *filename);
-int is_file_empty(const char *filename);
-int validate_scene(t_scene *scene);
-int validate_line_tokens(char **tokens);
-int check_rt_file(const char *filename);
+int 	has_rt_extension(const char *filename);
+int 	is_file_empty(const char *filename);
+int 	validate_scene(t_scene *scene);
+int 	validate_line_tokens(char **tokens);
+int 	check_rt_file(const char *filename);
+
+//clean
+void 	cleanup_mlx(t_mlx_data *data);
+void	cleanup_and_exit(t_app *app, int msg);
 
 #endif

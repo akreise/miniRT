@@ -6,11 +6,12 @@
 /*   By: akreise <akreise@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 11:51:05 by pshcherb          #+#    #+#             */
-/*   Updated: 2025/07/20 19:41:20 by akreise          ###   ########.fr       */
+/*   Updated: 2025/07/28 18:32:36 by akreise          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/parser.h"
+#include "../../includes/math_utils.h"
 
 // Обрабатывает строку, описывающую сферу
 // Формат: sp <center> <diameter> <color> Например: sp 0,0,0 10 255,0,0
@@ -69,7 +70,7 @@ int	handle_plane(char **tokens, t_scene *scene)
 
 // Проверка, что вектор направления цилиндра нормализован,
 // и радиус и высота положительны
-static int	error_handling(t_cylinder *cylinder)
+/*static int	error_handling(t_cylinder *cylinder)
 {
 	if (fabs(vec3_length(cylinder->direction) - 1.0) > 0.001)
 	{
@@ -84,7 +85,7 @@ static int	error_handling(t_cylinder *cylinder)
 		return (0);
 	}
 	return (1);
-}
+}*/
 
 // Обрабатывает цилиндр - Формат: cy <base> <direction> <diameter> <height> <color>
 // base — основание цилиндра (vec3)
@@ -104,11 +105,22 @@ int	handle_cylinder(char **tokens, t_scene *scene)
 		return (ft_printf("Error: Memory allocation failed for Cylinder\n"), 0);
 	cylinder->base = parse_vec3(tokens[1]);// Парсим базовую точку, направление, радиус, высоту и цвет
 	cylinder->direction = parse_vec3(tokens[2]);
+	if (vec3_length(cylinder->direction) == 0.0)
+	{
+		ft_printf("Error: Cylinder direction vector cannot be zero\n");
+		free(cylinder);
+		return (0);
+	}
+	cylinder->direction = vec3_normalize(cylinder->direction);// Нормализуем вектор направления
 	cylinder->radius = ft_atof(tokens[3]) / 2.0;
 	cylinder->height = ft_atof(tokens[4]);
 	cylinder->color = parse_color(tokens[5]);
-	if (!error_handling(cylinder))// Проверка нормализованности и положительности параметров
-		return (0);
+	if (cylinder->radius <= 0.0 || cylinder->height <= 0.0)
+    {
+        ft_printf("Error: Cylinder dimensions are invalid\n");
+        free(cylinder);
+        return (0);
+    }
 	cylinder->next = scene->cylinders;
 	scene->cylinders = cylinder;
 	return (1);

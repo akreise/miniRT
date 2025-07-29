@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pshcherb <pshcherb@student.42.fr>          +#+  +:+       +#+        */
+/*   By: akreise <akreise@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 10:56:06 by pshcherb          #+#    #+#             */
-/*   Updated: 2025/05/15 17:10:26 by pshcherb         ###   ########.fr       */
+/*   Updated: 2025/07/28 19:33:51 by akreise          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,10 @@
 # include <unistd.h>
 # include <math.h>
 
+typedef struct s_app t_app;
 // read_rt_file.c
-void	read_rt_file(const char *filename, t_scene *scene);
-void	process_line(char *line, t_scene *scene);
+void	read_rt_file(const char *filename, t_app *app);
+void	process_line(char *line, t_app *app);
 
 // id_element.c
 int     id_element(char **tokens, t_scene *scene);

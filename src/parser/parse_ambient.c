@@ -6,7 +6,7 @@
 /*   By: akreise <akreise@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 11:49:06 by pshcherb          #+#    #+#             */
-/*   Updated: 2025/07/23 17:09:48 by akreise          ###   ########.fr       */
+/*   Updated: 2025/07/28 18:33:04 by akreise          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,10 @@ int	handle_ambient(char **tokens, t_scene *scene)
 	}
 	color = parse_color(tokens[2]);// Парсинг цвета из строки формата "R,G,B"
 	if (color.r == 0 && color.g == 0 && color.b == 0)// Проверка, цвет успешно распознан (не черный по умолчанию)
-		return (ft_printf("Error: Failed to parse color for Ambient light\n"),
-			0);
+		{
+			ft_printf("Error: Failed to parse color for Ambient light\n");
+			return (0);
+		}
 	// Сохранение параметров ambient light в структуре сцены
 	scene->ambient.ratio = ratio;
 	scene->ambient.color = color;

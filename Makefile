@@ -3,16 +3,16 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: pshcherb <pshcherb@student.42.fr>          +#+  +:+       +#+         #
+#    By: akreise <akreise@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/06 10:54:27 by pshcherb          #+#    #+#              #
-#    Updated: 2025/07/24 16:20:56 by pshcherb         ###   ########.fr        #
+#    Updated: 2025/07/29 14:59:15 by akreise          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = miniRT
 CC = gcc
-CFLAGS += -Wall -Wextra -Werror -I/usr/local/include -I$(MLX_DIR) $(shell pkg-config --cflags x11)
+CFLAGS += -Wall -Wextra -Werror -I/usr/local/include -I$(MLX_DIR) $(shell pkg-config --cflags x11) -g -fsanitize=address
 LDFLAGS += -L$(MLX_DIR) -lmlx -L/usr/X11/lib -lX11 -lXext  -lm -L/opt/homebrew/opt/libbsd/lib -lbsd $(shell pkg-config --libs x11) # Убрал -L/usr/local/lib
 SRC = src/parser/read_rt_file.c \
 		src/parser/id_element.c \
@@ -32,6 +32,7 @@ SRC = src/parser/read_rt_file.c \
 		src/utils/intersect_utils.c \
 		src/utils/parsing_utils.c \
 		src/render/render.c \
+		clean.c \
 		check.c \
 		main.c \
 

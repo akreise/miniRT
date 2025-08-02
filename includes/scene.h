@@ -6,7 +6,7 @@
 /*   By: pshcherb <pshcherb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 10:56:38 by pshcherb          #+#    #+#             */
-/*   Updated: 2025/08/02 12:38:17 by pshcherb         ###   ########.fr       */
+/*   Updated: 2025/08/02 14:16:49 by pshcherb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ typedef struct  s_sphere {
 	t_vec3      	center;
 	double      	radius;
 	t_color     	color;
-	double reflectivity; // 0.0 — матовый, 1.0 — идеально зеркальный
+	double 			reflectivity; // 0.0 — матовый, 1.0 — идеально зеркальный
 	struct s_sphere *next;
 } t_sphere;
 
@@ -55,7 +55,7 @@ typedef struct 	s_plane {
 	t_vec3 			point;
 	t_vec3 			normal;
 	t_color 		color;
-	double reflectivity; // 0.0 — матовый, 1.0 — идеально зеркальный
+	double 			reflectivity; // 0.0 — матовый, 1.0 — идеально зеркальный
 	struct s_plane *next;
 } t_plane;
 
@@ -65,7 +65,7 @@ typedef struct s_cylinder {
 	double 				radius;
 	double 				height;
 	t_color 			color;
-	double reflectivity; // 0.0 — матовый, 1.0 — идеально зеркальный
+	double 				reflectivity; // 0.0 — матовый, 1.0 — идеально зеркальный
 	struct s_cylinder 	*next;
 } t_cylinder;
 

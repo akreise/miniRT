@@ -6,7 +6,7 @@
 /*   By: pshcherb <pshcherb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 10:55:51 by pshcherb          #+#    #+#             */
-/*   Updated: 2025/08/02 12:26:58 by pshcherb         ###   ########.fr       */
+/*   Updated: 2025/08/02 13:50:38 by pshcherb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,11 +49,13 @@ t_color	compute_lighting(t_vec3 hit_point, t_vec3 normal, t_color obj_color,
 double shadow_factor(t_vec3 point, t_light *light, t_scene *scene);
 t_vec3 random_in_unit_disk(void);
 // trace_ray.c
-t_color trace_ray(t_ray ray, t_scene *scene);
-void    trace_sphere(t_color *color, double *closest, t_ray ray, t_scene *scene);
-void    trace_plane(t_color *color, double *closest, t_ray ray, t_scene *scene);
-void    trace_cylinders(t_color *color, double *closest, t_ray ray, t_scene *scene);
+t_color trace_ray(t_ray ray, t_scene *scene, int depth);
+void    trace_sphere(t_color *color, double *closest, t_ray ray, t_scene *scene, int depth);
+void    trace_plane(t_color *color, double *closest, t_ray ray, t_scene *scene, int depth);
+void    trace_cylinder(t_color *color, double *closest, t_ray ray, t_scene *scene, int depth);
 t_vec3	get_cylinder_normal(t_cylinder *cy, t_vec3 hit);
+t_color color_blend(t_color c1, t_color c2, double factor);
+t_color trace_ray_recursive(t_ray ray, t_scene *scene, int depth);
 
 // init
 t_image	init_image(void *mlx);

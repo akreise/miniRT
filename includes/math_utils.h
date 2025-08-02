@@ -6,7 +6,7 @@
 /*   By: pshcherb <pshcherb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 10:56:28 by pshcherb          #+#    #+#             */
-/*   Updated: 2025/05/15 17:10:19 by pshcherb         ###   ########.fr       */
+/*   Updated: 2025/08/02 12:39:34 by pshcherb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,5 +82,6 @@ bool intersect_cylinder(t_ray ray, t_cylinder *cylinder, double *t);
 
 // intersect_utils.c
 bool	min_pos(double t0, double t1, double *t);
+t_vec3 reflect(t_vec3 incident, t_vec3 normal);
 
 #endif

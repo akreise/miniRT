@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_objects.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: akreise <akreise@student.42.fr>            +#+  +:+       +#+        */
+/*   By: pshcherb <pshcherb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 11:51:05 by pshcherb          #+#    #+#             */
-/*   Updated: 2025/07/20 19:41:20 by akreise          ###   ########.fr       */
+/*   Updated: 2025/08/02 12:57:29 by pshcherb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,10 @@ int	handle_sphere(char **tokens, t_scene *scene)
 	sphere->center = parse_vec3(tokens[1]);// Парсим параметры
 	sphere->radius = ft_atof(tokens[2]) / 2.0;// Диаметр делим на 2
 	sphere->color = parse_color(tokens[3]);
+	if (tokens[4])
+		sphere->reflectivity = ft_atof(tokens[4]);
+	else
+		sphere->reflectivity = 0.0;
 	if (sphere->radius <= 0.0)// Проверка валидности радиуса
 	{
 		ft_printf("Error: Invalid diameter: %f\n", sphere->radius * 2);
@@ -56,6 +60,10 @@ int	handle_plane(char **tokens, t_scene *scene)
 	plane->point = parse_vec3(tokens[1]);// Парсим точку, нормаль и цвет
 	plane->normal = parse_vec3(tokens[2]);
 	plane->color = parse_color(tokens[3]);
+	if (tokens[4])
+		plane->reflectivity = ft_atof(tokens[4]);
+	else
+		plane->reflectivity = 0.0;
 	if (fabs(vec3_length(plane->normal) - 1.0) > 0.001)// Проверка, что нормаль нормализована
 	{
 		ft_printf("Error: Plane normal vector is not normalized\n");
@@ -107,6 +115,10 @@ int	handle_cylinder(char **tokens, t_scene *scene)
 	cylinder->radius = ft_atof(tokens[3]) / 2.0;
 	cylinder->height = ft_atof(tokens[4]);
 	cylinder->color = parse_color(tokens[5]);
+	if (tokens[6])
+		cylinder->reflectivity = ft_atof(tokens[6]);
+	else
+		cylinder->reflectivity = 0.0;
 	if (!error_handling(cylinder))// Проверка нормализованности и положительности параметров
 		return (0);
 	cylinder->next = scene->cylinders;

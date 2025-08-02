@@ -3,15 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   trace_ray.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: akreise <akreise@student.42.fr>            +#+  +:+       +#+        */
+/*   By: pshcherb <pshcherb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/26 12:05:31 by pshcherb          #+#    #+#             */
-/*   Updated: 2025/07/21 14:49:05 by akreise          ###   ########.fr       */
+/*   Updated: 2025/08/02 13:50:55 by pshcherb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../includes/miniRT.h"
 #include "../../../includes/math_utils.h"
+#define MAX_DEPTH 5
 
 // Вычисляет нормаль (перпендикуляр) к боковой поверхности цилиндра в точке пересечения
 t_vec3	get_cylinder_normal(t_cylinder *cy, t_vec3 hit)
@@ -28,7 +29,7 @@ t_vec3	get_cylinder_normal(t_cylinder *cy, t_vec3 hit)
 }
 
 // Проверяет пересечение луча со всеми цилиндрами в сцене
-void    trace_cylinders(t_color *color, double *closest, t_ray ray, t_scene *scene)
+void    trace_cylinder(t_color *color, double *closest, t_ray ray, t_scene *scene, int depth)
 {
 	t_cylinder *cy;
 	t_vec3  hit_point;
@@ -42,7 +43,16 @@ void    trace_cylinders(t_color *color, double *closest, t_ray ray, t_scene *sce
 		{
 			hit_point = ray_at(ray, t);// Точка пересечения
 			normal = get_cylinder_normal(cy, hit_point);// Нормаль в этой точке
-			*color = compute_lighting(hit_point, normal, cy->color, scene);// Освещение
+			t_color local_color = compute_lighting(hit_point, normal, cy->color, scene);// Освещение
+			if (cy->reflectivity > 0)
+			{
+				t_vec3 reflected_dir = vec3_normalize(reflect(ray.direction, normal));
+				t_ray reflected_ray = create_ray(vec3_add(hit_point, vec3_scale(normal, 1e-4)), reflected_dir);
+
+				t_color reflected_color = trace_ray(reflected_ray, scene, depth + 1);
+				local_color = color_blend(local_color, reflected_color, cy->reflectivity);
+			}
+			*color = local_color;
 			*closest = t;// Запоминаем расстояние
 		}
 		cy = cy->next;
@@ -50,7 +60,7 @@ void    trace_cylinders(t_color *color, double *closest, t_ray ray, t_scene *sce
 }
 
 // Проверяет пересечение луча со всеми плоскостями в сцене
-void    trace_plane(t_color *color, double *closest, t_ray ray, t_scene *scene)
+void    trace_plane(t_color *color, double *closest, t_ray ray, t_scene *scene, int depth)
 {
 	t_plane *pl;
 	t_vec3  hit_point;
@@ -64,7 +74,16 @@ void    trace_plane(t_color *color, double *closest, t_ray ray, t_scene *scene)
 		{
 			hit_point = ray_at(ray, t);// Точка пересечения
 			normal = pl->normal;// Нормаль заранее задана
-			*color = compute_lighting(hit_point, normal, pl->color, scene);// Освещение
+			t_color local_color = compute_lighting(hit_point, normal, pl->color, scene);// Освещение
+			if (pl->reflectivity > 0)
+			{
+				t_vec3 reflected_dir = vec3_normalize(reflect(ray.direction, normal));
+				t_ray reflected_ray = create_ray(vec3_add(hit_point, vec3_scale(normal, 1e-4)), reflected_dir);
+
+				t_color reflected_color = trace_ray(reflected_ray, scene, depth + 1);
+				local_color = color_blend(local_color, reflected_color, pl->reflectivity);
+			}
+			*color = local_color;
 			*closest = t;// Запоминаем расстояние
 		}
 		pl = pl->next;
@@ -72,7 +91,7 @@ void    trace_plane(t_color *color, double *closest, t_ray ray, t_scene *scene)
 }
 
 // Проверяет пересечение луча со всеми сферами в сцене
-void    trace_sphere(t_color *color, double *closest, t_ray ray, t_scene *scene)
+void    trace_sphere(t_color *color, double *closest, t_ray ray, t_scene *scene, int depth)
 {
 	t_sphere *sp;
 	double  t;
@@ -87,23 +106,69 @@ void    trace_sphere(t_color *color, double *closest, t_ray ray, t_scene *scene)
 			hit_point = ray_at(ray, t);// Точка пересечения
 			// Нормаль — направление от центра сферы к точке пересечения
 			normal = vec3_normalize(vec3_sub(hit_point, sp->center));
-			*color = compute_lighting(hit_point, normal, sp->color, scene);// Освещение
+			t_color local_color = compute_lighting(hit_point, normal, sp->color, scene);
+			if (sp->reflectivity > 0)
+			{
+				t_vec3 reflected_dir = vec3_normalize(reflect(ray.direction, normal));
+				t_ray reflected_ray = create_ray(vec3_add(hit_point, vec3_scale(normal, 1e-4)), reflected_dir);
+
+				t_color reflected_color = trace_ray(reflected_ray, scene, depth + 1);
+				local_color = color_blend(local_color, reflected_color, sp->reflectivity);
+			}
+			*color = local_color;
 			*closest = t;
 		}
 		sp = sp->next;
 	}
 }
 
-// Основная функция: ищет ближайший объект, с которым пересекается луч, и возвращает его цвет
-t_color trace_ray(t_ray ray, t_scene *scene)
+static t_color color_black(void)
 {
-	t_color color;
-	double  closest;
+	return ((t_color){0,0,0});
+}
+// Основная функция: ищет ближайший объект, с которым пересекается луч, и возвращает его цвет
+t_color trace_ray(t_ray ray, t_scene *scene, int depth)
+{
+	if (depth > MAX_DEPTH)
+        return color_black();
 
-	closest = 1e30;// Очень большое число — считаем, что ничего не найдено
-	color = (t_color){0, 0, 0};// Цвет по умолчанию — чёрный (фон)
-	trace_sphere(&color, &closest, ray, scene);// Проверка пересечений со всеми типами объектов
-	trace_plane(&color, &closest, ray, scene);
-	trace_cylinders(&color, &closest, ray, scene);
-	return (color);// Цвет ближайшего объекта (если найден)
+    // Инициализация результата и *closest
+    t_color color = color_black();
+    double closest = INFINITY;
+
+    trace_sphere(&color, &closest, ray, scene, depth);
+    trace_cylinder(&color, &closest, ray, scene, depth);
+    trace_plane(&color, &closest, ray, scene, depth);
+
+    return color;
+
+}
+
+t_color trace_ray_recursive(t_ray ray, t_scene *scene, int depth)
+{
+	if (depth <= 0)
+		return (t_color){0, 0, 0};
+
+	t_color color = {0, 0, 0};
+	double closest = 1e30;
+
+	// Аналог trace_sphere/plane/cylinder, но каждый должен вызывать:
+	// trace_ray_recursive(..., depth - 1) для отражения
+
+	trace_sphere(&color, &closest, ray, scene, depth - 1);
+	trace_plane(&color, &closest, ray, scene, depth - 1);
+	trace_cylinder(&color, &closest, ray, scene, depth - 1);
+
+	return color;
+}
+
+
+t_color color_blend(t_color c1, t_color c2, double factor)
+{
+	t_color result;
+
+	result.r = c1.r * (1 - factor) + c2.r * factor;
+	result.g = c1.g * (1 - factor) + c2.g * factor;
+	result.b = c1.b * (1 - factor) + c2.b * factor;
+	return result;
 }

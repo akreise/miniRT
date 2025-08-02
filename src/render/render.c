@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   render.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: akreise <akreise@student.42.fr>            +#+  +:+       +#+        */
+/*   By: pshcherb <pshcherb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/26 17:38:34 by pshcherb          #+#    #+#             */
-/*   Updated: 2025/07/21 16:57:58 by akreise          ###   ########.fr       */
+/*   Updated: 2025/08/02 13:52:24 by pshcherb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ void render_full_scene(t_mlx_data *data)
             t_ray ray = camera_ray(data->scene->camera, x, y);
             
             // Use your existing trace_ray function for full scene
-            t_color color = trace_ray(ray, data->scene);
+            t_color color = trace_ray(ray, data->scene, 0);
             
             int rgb_color = color_to_int(color);
             put_pixel(&data->img, x, y, rgb_color);

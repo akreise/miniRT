@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   intersect_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: akreise <akreise@student.42.fr>            +#+  +:+       +#+        */
+/*   By: pshcherb <pshcherb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 16:21:20 by pshcherb          #+#    #+#             */
-/*   Updated: 2025/07/21 14:51:11 by akreise          ###   ########.fr       */
+/*   Updated: 2025/08/02 12:39:08 by pshcherb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,3 +33,9 @@ bool	min_pos(double t0, double t1, double *t)
 		return (false);// оба непригодны (отрицательные или слишком близкие к нулю)
 	return (true);// найдено подходящее t
 }
+
+t_vec3 reflect(t_vec3 incident, t_vec3 normal)
+{
+	return vec3_sub(incident, vec3_scale(normal, 2 * vec3_dot(incident, normal)));
+}
+

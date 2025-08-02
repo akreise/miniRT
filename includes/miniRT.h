@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   miniRT.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: akreise <akreise@student.42.fr>            +#+  +:+       +#+        */
+/*   By: pshcherb <pshcherb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 10:55:51 by pshcherb          #+#    #+#             */
-/*   Updated: 2025/07/23 17:39:16 by akreise          ###   ########.fr       */
+/*   Updated: 2025/08/02 12:06:47 by pshcherb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ t_color color_mul(t_color a, t_color b);
 // lightning_calculations.c
 t_color	compute_lighting(t_vec3 hit_point, t_vec3 normal, t_color obj_color,
 						 t_scene *scene);
-
+bool is_in_shadow(t_vec3 point, t_vec3 light_dir, double light_distance, t_scene *scene);
 // trace_ray.c
 t_color trace_ray(t_ray ray, t_scene *scene);
 void    trace_sphere(t_color *color, double *closest, t_ray ray, t_scene *scene);

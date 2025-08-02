@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lighting_calculation.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: akreise <akreise@student.42.fr>            +#+  +:+       +#+        */
+/*   By: pshcherb <pshcherb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 10:48:07 by pshcherb          #+#    #+#             */
-/*   Updated: 2025/07/23 15:52:57 by akreise          ###   ########.fr       */
+/*   Updated: 2025/08/02 12:07:45 by pshcherb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,12 +36,55 @@ t_color	compute_lighting(t_vec3 hit_point, t_vec3 normal, t_color obj_color,
 		// Если < 0 — свет падает с обратной стороны и не освещает
 		l.dot = vec3_dot(normal, l.light_dir);
 		if (l.dot > 0)
-		{// Яркость зависит от угла: чем ближе к 0°, тем сильнее
-			l.intensity = l.light->brightness * l.dot;
-			l.diffuse = color_scale(obj_color, l.intensity);// Масштабируем цвет объекта по интенсивности
-			l.diffuse_total = color_add(l.diffuse_total, l.diffuse);// Добавляем к общему диффузному свету
+		{
+			double light_dist = vec3_length(vec3_sub(l.light->position, hit_point));
+
+			// Проверка на тень
+			if (!is_in_shadow(hit_point, l.light_dir, light_dist, scene))
+			{
+				l.intensity = l.light->brightness * l.dot;
+				l.diffuse = color_scale(obj_color, l.intensity);
+				l.diffuse_total = color_add(l.diffuse_total, l.diffuse);
+			}
 		}
 		l.light = l.light->next;// Следующий источник света
 	}
 	return (color_add(l.ambient, l.diffuse_total));// Возвращаем сумму ambient + diffuse как итоговый цвет
+}
+
+bool is_in_shadow(t_vec3 point, t_vec3 light_dir, double light_distance, t_scene *scene)
+{
+	t_ray shadow_ray;
+	double t;
+
+	shadow_ray = create_ray(vec3_add(point, vec3_scale(light_dir, 1e-4)), light_dir); // немного смещаем точку, чтобы избежать самопересечения
+
+	// Проверка на пересечение с любой сферой
+	t_sphere *sp = scene->spheres;
+	while (sp)
+	{
+		if (intersect_sphere(shadow_ray, sp, &t) && t < light_distance)
+			return true;
+		sp = sp->next;
+	}
+
+	// Проверка на пересечение с любой плоскостью
+	t_plane *pl = scene->planes;
+	while (pl)
+	{
+		if (intersect_plane(shadow_ray, pl, &t) && t < light_distance)
+			return true;
+		pl = pl->next;
+	}
+
+	// Проверка на пересечение с любым цилиндром
+	t_cylinder *cy = scene->cylinders;
+	while (cy)
+	{
+		if (intersect_cylinder(shadow_ray, cy, &t) && t < light_distance)
+			return true;
+		cy = cy->next;
+	}
+
+	return false;
 }

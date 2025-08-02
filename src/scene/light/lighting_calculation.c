@@ -6,7 +6,7 @@
 /*   By: pshcherb <pshcherb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 10:48:07 by pshcherb          #+#    #+#             */
-/*   Updated: 2025/08/02 12:07:45 by pshcherb         ###   ########.fr       */
+/*   Updated: 2025/08/02 12:28:18 by pshcherb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,12 +37,11 @@ t_color	compute_lighting(t_vec3 hit_point, t_vec3 normal, t_color obj_color,
 		l.dot = vec3_dot(normal, l.light_dir);
 		if (l.dot > 0)
 		{
-			double light_dist = vec3_length(vec3_sub(l.light->position, hit_point));
-
+			double shadow = shadow_factor(hit_point, l.light, scene);
 			// Проверка на тень
-			if (!is_in_shadow(hit_point, l.light_dir, light_dist, scene))
+			if (shadow > 0)
 			{
-				l.intensity = l.light->brightness * l.dot;
+				l.intensity = l.light->brightness * l.dot * shadow;
 				l.diffuse = color_scale(obj_color, l.intensity);
 				l.diffuse_total = color_add(l.diffuse_total, l.diffuse);
 			}
@@ -52,39 +51,58 @@ t_color	compute_lighting(t_vec3 hit_point, t_vec3 normal, t_color obj_color,
 	return (color_add(l.ambient, l.diffuse_total));// Возвращаем сумму ambient + diffuse как итоговый цвет
 }
 
-bool is_in_shadow(t_vec3 point, t_vec3 light_dir, double light_distance, t_scene *scene)
+double shadow_factor(t_vec3 point, t_light *light, t_scene *scene)
 {
-	t_ray shadow_ray;
-	double t;
+	int blocked = 0;
+	int samples = 32; // Чем больше, тем мягче (но медленнее)
+	double radius = 0.5; // Размер источника света
 
-	shadow_ray = create_ray(vec3_add(point, vec3_scale(light_dir, 1e-4)), light_dir); // немного смещаем точку, чтобы избежать самопересечения
-
-	// Проверка на пересечение с любой сферой
-	t_sphere *sp = scene->spheres;
-	while (sp)
+	for (int i = 0; i < samples; i++)
 	{
-		if (intersect_sphere(shadow_ray, sp, &t) && t < light_distance)
-			return true;
-		sp = sp->next;
+		// Смещаем точку света немного случайно
+		t_vec3 offset = random_in_unit_disk();
+		t_vec3 offset3d = {
+			offset.x * radius,
+			offset.y * radius,
+			0
+		};
+		t_vec3 perturbed_light = vec3_add(light->position, offset3d);
+
+		t_vec3 to_perturbed = vec3_sub(perturbed_light, point);
+		double light_dist = vec3_length(to_perturbed);
+		t_vec3 dir = vec3_normalize(to_perturbed);
+
+		t_ray shadow_ray = create_ray(vec3_add(point, vec3_scale(dir, 1e-4)), dir);
+		double t;
+
+		bool in_shadow = false;
+
+		// Проверка на пересечение с любым объектом
+		for (t_sphere *sp = scene->spheres; sp; sp = sp->next)
+			if (intersect_sphere(shadow_ray, sp, &t) && t > 1e-4 && t < light_dist)
+				in_shadow = true;
+		for (t_plane *pl = scene->planes; pl; pl = pl->next)
+			if (intersect_plane(shadow_ray, pl, &t) && t > 1e-4 && t < light_dist)
+				in_shadow = true;
+		for (t_cylinder *cy = scene->cylinders; cy; cy = cy->next)
+			if (intersect_cylinder(shadow_ray, cy, &t) && t > 1e-4 && t < light_dist)
+				in_shadow = true;
+
+		if (in_shadow)
+			blocked++;
 	}
 
-	// Проверка на пересечение с любой плоскостью
-	t_plane *pl = scene->planes;
-	while (pl)
-	{
-		if (intersect_plane(shadow_ray, pl, &t) && t < light_distance)
-			return true;
-		pl = pl->next;
-	}
-
-	// Проверка на пересечение с любым цилиндром
-	t_cylinder *cy = scene->cylinders;
-	while (cy)
-	{
-		if (intersect_cylinder(shadow_ray, cy, &t) && t < light_distance)
-			return true;
-		cy = cy->next;
-	}
-
-	return false;
+	return 1.0 - ((double)blocked / samples); // 1.0 — полностью освещён, 0.0 — полностью в тени
 }
+
+t_vec3 random_in_unit_disk(void)
+{
+	t_vec3 p;
+	do {
+		p.x = ((double)rand() / RAND_MAX) * 2.0 - 1.0;
+		p.y = ((double)rand() / RAND_MAX) * 2.0 - 1.0;
+		p.z = 0;
+	} while (vec3_dot(p, p) >= 1.0);
+	return p;
+}
+

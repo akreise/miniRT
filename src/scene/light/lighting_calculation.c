@@ -6,7 +6,7 @@
 /*   By: pshcherb <pshcherb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 10:48:07 by pshcherb          #+#    #+#             */
-/*   Updated: 2025/08/02 12:28:18 by pshcherb         ###   ########.fr       */
+/*   Updated: 2025/08/03 17:16:53 by pshcherb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,38 +18,45 @@
 // normal — нормаль в точке пересечения
 // obj_color — цвет объекта
 // scene — сцена (включает источник света и ambient)
-t_color	compute_lighting(t_vec3 hit_point, t_vec3 normal, t_color obj_color,
-						 t_scene *scene)
+t_color compute_lighting(t_vec3 hit_point, t_vec3 normal, t_color obj_color,
+                         double specular, t_scene *scene, t_vec3 camera_pos)
 {
-	t_light_c	l;
-
-	// Ambient lighting: масштабируем ambient color сцены по коэффициенту
+	t_light_c l;
 	t_color ambient_color = color_mul(obj_color, scene->ambient.color);
 	l.ambient = color_scale(ambient_color, scene->ambient.ratio);
-	l.diffuse_total = (t_color){0, 0, 0};// Начальное значение для диффузного освещения — чёрный
-	l.light = scene->lights;// Проходим по всем источникам света
+	l.diffuse_total = (t_color){0, 0, 0};
+	l.light = scene->lights;
+
+	t_vec3 view_dir = vec3_normalize(vec3_sub(camera_pos, hit_point));
+
 	while (l.light)
-	{// Вычисляем направление от точки к источнику света
+	{
 		l.light_dir = vec3_sub(l.light->position, hit_point);
 		l.light_dir = vec3_normalize(l.light_dir);
-		//Скалярное произведение нормали и направления света
-		// Если < 0 — свет падает с обратной стороны и не освещает
 		l.dot = vec3_dot(normal, l.light_dir);
 		if (l.dot > 0)
 		{
 			double shadow = shadow_factor(hit_point, l.light, scene);
-			// Проверка на тень
 			if (shadow > 0)
 			{
 				l.intensity = l.light->brightness * l.dot * shadow;
-				l.diffuse = color_scale(obj_color, l.intensity);
-				l.diffuse_total = color_add(l.diffuse_total, l.diffuse);
+				t_color diffuse = color_scale(obj_color, l.intensity);
+				l.diffuse_total = color_add(l.diffuse_total, diffuse);
+
+				if (specular > 0)
+				{
+					t_vec3 reflect_dir = reflect(vec3_scale(l.light_dir, -1), normal);
+					double spec = pow(fmax(vec3_dot(view_dir, reflect_dir), 0.0), specular);
+					t_color specular_color = color_scale(l.light->color, l.light->brightness * spec * shadow);
+					l.diffuse_total = color_add(l.diffuse_total, specular_color);
+				}
 			}
 		}
-		l.light = l.light->next;// Следующий источник света
+		l.light = l.light->next;
 	}
-	return (color_add(l.ambient, l.diffuse_total));// Возвращаем сумму ambient + diffuse как итоговый цвет
+	return (color_add(l.ambient, l.diffuse_total));
 }
+
 
 double shadow_factor(t_vec3 point, t_light *light, t_scene *scene)
 {

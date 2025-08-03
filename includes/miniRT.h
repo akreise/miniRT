@@ -6,7 +6,7 @@
 /*   By: pshcherb <pshcherb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 10:55:51 by pshcherb          #+#    #+#             */
-/*   Updated: 2025/08/03 15:42:52 by pshcherb         ###   ########.fr       */
+/*   Updated: 2025/08/03 17:18:03 by pshcherb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ t_color color_mul(t_color a, t_color b);
 
 // lightning_calculations.c
 t_color	compute_lighting(t_vec3 hit_point, t_vec3 normal, t_color obj_color,
-						 t_scene *scene);
+						 double specular, t_scene *scene, t_vec3 camera_pos);
 double shadow_factor(t_vec3 point, t_light *light, t_scene *scene);
 t_vec3 random_in_unit_disk(void);
 // trace_ray.c

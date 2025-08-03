@@ -6,7 +6,7 @@
 /*   By: pshcherb <pshcherb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/26 12:05:31 by pshcherb          #+#    #+#             */
-/*   Updated: 2025/08/02 13:50:55 by pshcherb         ###   ########.fr       */
+/*   Updated: 2025/08/03 17:18:41 by pshcherb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ void    trace_cylinder(t_color *color, double *closest, t_ray ray, t_scene *scen
 		{
 			hit_point = ray_at(ray, t);// Точка пересечения
 			normal = get_cylinder_normal(cy, hit_point);// Нормаль в этой точке
-			t_color local_color = compute_lighting(hit_point, normal, cy->color, scene);// Освещение
+			t_color local_color = compute_lighting(hit_point, normal, cy->color, cy->specular, scene, scene->camera.position);// Освещение
 			if (cy->reflectivity > 0)
 			{
 				t_vec3 reflected_dir = vec3_normalize(reflect(ray.direction, normal));
@@ -74,7 +74,7 @@ void    trace_plane(t_color *color, double *closest, t_ray ray, t_scene *scene, 
 		{
 			hit_point = ray_at(ray, t);// Точка пересечения
 			normal = pl->normal;// Нормаль заранее задана
-			t_color local_color = compute_lighting(hit_point, normal, pl->color, scene);// Освещение
+			t_color local_color = compute_lighting(hit_point, normal, pl->color, pl->specular, scene, scene->camera.position);// Освещение
 			if (pl->reflectivity > 0)
 			{
 				t_vec3 reflected_dir = vec3_normalize(reflect(ray.direction, normal));
@@ -106,7 +106,7 @@ void    trace_sphere(t_color *color, double *closest, t_ray ray, t_scene *scene,
 			hit_point = ray_at(ray, t);// Точка пересечения
 			// Нормаль — направление от центра сферы к точке пересечения
 			normal = vec3_normalize(vec3_sub(hit_point, sp->center));
-			t_color local_color = compute_lighting(hit_point, normal, sp->color, scene);
+			t_color local_color = compute_lighting(hit_point, normal, sp->color, sp->specular, scene, scene->camera.position);
 			if (sp->reflectivity > 0)
 			{
 				t_vec3 reflected_dir = vec3_normalize(reflect(ray.direction, normal));

@@ -6,7 +6,7 @@
 /*   By: akreise <akreise@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 17:22:22 by akreise           #+#    #+#             */
-/*   Updated: 2025/07/23 17:38:27 by akreise          ###   ########.fr       */
+/*   Updated: 2025/07/29 16:42:02 by akreise          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,33 +19,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void cleanup_and_exit(t_mlx_data *data)
-{
-    if (data->img.img)
-        mlx_destroy_image(data->mlx_ptr, data->img.img);
-    if (data->win_ptr)
-        mlx_destroy_window(data->mlx_ptr, data->win_ptr);
-    if (data->mlx_ptr)
-    {
-        mlx_destroy_display(data->mlx_ptr);
-        free(data->mlx_ptr);
-    }
-    // TODO: Add scene cleanup function
-    exit(0);
-}
-
-int handle_keypress(int keycode, t_mlx_data *data)
+int handle_keypress(int keycode, t_app *app)
 {
     if (keycode == 65307) // ESC key
-    {
-        cleanup_and_exit(data);
-    }
+        cleanup_and_exit(app, 0);
     return (0);
 }
 
-int close_window(t_mlx_data *data)
+int close_window(t_app *app)
 {
-    cleanup_and_exit(data);
+    cleanup_and_exit(app, 0);
     return (0);
 }
 
@@ -68,73 +51,45 @@ int main(int argc, char **argv)
         return (1);
     }
 
-    // Проверка расширения, пустоты и количества A, C, L
     if (!check_rt_file(argv[1]))
         return (1);
 
-    t_mlx_data data;
-    data.mlx_ptr = mlx_init();
-    if (!data.mlx_ptr)
+    t_app app; // теперь всё через app
+
+    // Init MLX
+    app.mlx_data.mlx_ptr = mlx_init();
+    if (!app.mlx_data.mlx_ptr)
     {
         printf("Error: Failed to initialize MLX\n");
         return (1);
     }
 
-    data.win_ptr = mlx_new_window(data.mlx_ptr, WIDTH, HEIGHT, "miniRT");
-    if (!data.win_ptr)
+    app.mlx_data.win_ptr = mlx_new_window(app.mlx_data.mlx_ptr, WIDTH, HEIGHT, "miniRT");
+    if (!app.mlx_data.win_ptr)
     {
         printf("Error: Failed to create window\n");
-        mlx_destroy_display(data.mlx_ptr);
-        free(data.mlx_ptr);
+        mlx_destroy_display(app.mlx_data.mlx_ptr);
+        free(app.mlx_data.mlx_ptr);
         return (1);
     }
 
-    data.img = init_image(data.mlx_ptr);
+    app.mlx_data.img = init_image(app.mlx_data.mlx_ptr);
 
-    t_scene scene;
-    initialize_scene(&scene);
-    data.scene = &scene;
+    // Init scene
+    initialize_scene(&app.scene);
 
-    // Парсинг сцены
-    read_rt_file(argv[1], &scene);
-    // Рендеринг сцены
-    render_full_scene(&data);
-    mlx_put_image_to_window(data.mlx_ptr, data.win_ptr, data.img.img, 0, 0);
+    // Парсим
+    read_rt_file(argv[1], &app);
+
+    // Рендер
+    render_full_scene(&app);
+    mlx_put_image_to_window(app.mlx_data.mlx_ptr, app.mlx_data.win_ptr, app.mlx_data.img.img, 0, 0);
 
     // Хуки
-    mlx_hook(data.win_ptr, 2, 1L << 0, handle_keypress, &data);
-    mlx_hook(data.win_ptr, 17, 1L << 17, close_window, &data);
+    mlx_hook(app.mlx_data.win_ptr, 2, 1L << 0, handle_keypress, &app);
+    mlx_hook(app.mlx_data.win_ptr, 17, 1L << 17, close_window, &app);
 
-    mlx_loop(data.mlx_ptr);
+    mlx_loop(app.mlx_data.mlx_ptr);
     return (0);
 }
-
-
-/*
-int	main(void)
-{
-	void	*mlx = mlx_init();
-	void	*win = mlx_new_window(mlx, WIDTH, HEIGHT, "RT test");
-
-	t_image	image = init_image(mlx);
-
-	t_camera	camera = {
-		.position = { -50, 0, 20 },
-		.orientation = { 0, 0, 1 },
-		.fov = 70
-	};
-
-	t_sphere sphere = {
-		.center = { 0, 0, 20.6 },
-		.radius = 12.6,
-		.color = {10, 0, 255}
-	};
-
-	render(&image, camera, &sphere);
-
-	mlx_put_image_to_window(mlx, win, image.img, 0, 0);
-	mlx_loop(mlx);
-
-	return (0);
-}*/
 

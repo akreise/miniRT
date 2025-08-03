@@ -6,45 +6,13 @@
 /*   By: pshcherb <pshcherb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/26 17:38:34 by pshcherb          #+#    #+#             */
-/*   Updated: 2025/08/02 13:52:24 by pshcherb         ###   ########.fr       */
+/*   Updated: 2025/08/03 15:45:15 by pshcherb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/render.h"
 #include "../../includes/miniRT.h"
-
-/*void	render_scene(t_scene *scene, void *mlx, void *win)
-{
-    int y;
-    int x;
-
-    y = 0;
-    x = 0;
-    while (y < HEIGHT)
-    {
-        while (x < WIDTH)
-        {
-            double u = (2.0 * x / WIDTH - 1.0) * tan(scene->camera.fov * 0.5 * M_PI / 180.0);
-			double v = (1.0 - 2.0 * y / HEIGHT) * tan(scene->camera.fov * 0.5 * M_PI / 180.0);
-
-			t_vec3 direction = vec3_add(
-				scene->camera.orientation,
-				vec3_add(
-					vec3_scale(scene->camera.right, u),
-					vec3_scale(scene->camera.up, v)
-				)
-			);
-
-			t_ray ray = create_ray(scene->camera.position, vec3_normalize(direction));
-			t_color color = trace_ray(ray, scene);
-
-			int rgb = (color.r << 16) | (color.g << 8) | color.b;
-			mlx_pixel_put(mlx, win, x, y, rgb);
-            x++;
-        }
-        y++;
-    }
-}*/
+#include <math.h>
 
 //генерация луча из камеры в пиксель (x, y) на экране
 t_ray camera_ray(t_camera camera, int x, int y)
@@ -81,50 +49,22 @@ t_ray camera_ray(t_camera camera, int x, int y)
     return ray;
 }
 
-void render_full_scene(t_mlx_data *data)
+void render_full_scene(t_app *app)
 {
+    t_scene *scene = &app->scene;
+    
     for (int y = 0; y < HEIGHT; y++)
     {
         for (int x = 0; x < WIDTH; x++)
         {
             // Use your existing camera_ray function
-            t_ray ray = camera_ray(data->scene->camera, x, y);
+            t_ray ray = camera_ray(scene->camera, x, y);
             
             // Use your existing trace_ray function for full scene
             t_color color = trace_ray(ray, data->scene, 0);
             
             int rgb_color = color_to_int(color);
-            put_pixel(&data->img, x, y, rgb_color);
+            put_pixel(&app->mlx_data.img, x, y, rgb_color);
         }
     }
 }
-/*
-// Рендеринг: заполняет изображение, проверяя пересечение лучей со сферой
-void render(t_image *img, t_camera camera, t_sphere *sphere)
-{
-	int x, y;
-
-	// Проходим по каждому пикселю изображения
-	for (y = 0; y < HEIGHT; y++)
-	{
-		for (x = 0; x < WIDTH; x++)
-		{
-			// Строим луч из камеры через пиксель (x, y)
-			t_ray ray = camera_ray(camera, x, y);
-			double t;
-
-			// Проверяем, пересекает ли луч сферу
-			if (intersect_sphere(ray, sphere, &t))
-			{
-                printf("Hit at pixel (%d, %d), t=%.2f\n", x, y, t);
-				// Есть пересечение — красим пиксель цветом сферы
-				put_pixel(img, x, y, color_to_int(sphere->color));
-			}
-			else
-			{
-				// Нет пересечения — черный фон
-				put_pixel(img, x, y, 0x000000);
-			}
-		}
-	}
-}*/

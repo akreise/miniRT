@@ -6,7 +6,7 @@
 /*   By: pshcherb <pshcherb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/26 17:38:34 by pshcherb          #+#    #+#             */
-/*   Updated: 2025/08/03 15:45:15 by pshcherb         ###   ########.fr       */
+/*   Updated: 2025/08/03 15:57:36 by pshcherb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ void render_full_scene(t_app *app)
             t_ray ray = camera_ray(scene->camera, x, y);
             
             // Use your existing trace_ray function for full scene
-            t_color color = trace_ray(ray, data->scene, 0);
+            t_color color = trace_ray(ray, scene, 0);
             
             int rgb_color = color_to_int(color);
             put_pixel(&app->mlx_data.img, x, y, rgb_color);

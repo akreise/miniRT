@@ -6,7 +6,7 @@
 /*   By: pshcherb <pshcherb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 11:51:05 by pshcherb          #+#    #+#             */
-/*   Updated: 2025/08/03 15:43:52 by pshcherb         ###   ########.fr       */
+/*   Updated: 2025/08/03 15:56:53 by pshcherb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,8 +127,6 @@ int	handle_cylinder(char **tokens, t_scene *scene)
 		cylinder->reflectivity = ft_atof(tokens[6]);
 	else
 		cylinder->reflectivity = 0.0;
-	if (!error_handling(cylinder))// Проверка нормализованности и положительности параметров
-		return (0);
 	if (cylinder->radius <= 0.0 || cylinder->height <= 0.0)
     {
         ft_printf("Error: Cylinder dimensions are invalid\n");

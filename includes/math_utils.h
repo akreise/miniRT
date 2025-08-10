@@ -6,7 +6,7 @@
 /*   By: pshcherb <pshcherb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 10:56:28 by pshcherb          #+#    #+#             */
-/*   Updated: 2025/08/02 12:39:34 by pshcherb         ###   ########.fr       */
+/*   Updated: 2025/08/05 23:51:14 by pshcherb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,12 @@ typedef struct s_cyl_i {
 	bool	valid;
 }	t_cyl_i;
 
+typedef struct s_triangle_i {
+	t_vec3 edge1, edge2, h, s, q;
+	double a, f, u, v, t;
+	bool valid;
+} t_triangle_i;
+
 // vec3_add_sub.c
 t_vec3	vec3_add(t_vec3 a, t_vec3 b);
 t_vec3	vec3_sub(t_vec3 a, t_vec3 b);
@@ -78,10 +84,12 @@ bool    intersect_plane(t_ray ray, t_plane *plane, double *t);
 bool    intersect_sphere(t_ray ray, t_sphere *sphere, double *t);
 
 // intercect_cylinder.c
-bool intersect_cylinder(t_ray ray, t_cylinder *cylinder, double *t);
+bool 	intersect_cylinder(t_ray ray, t_cylinder *cylinder, double *t);
+
+bool intersect_triangle(t_ray ray, t_triangle *tri, double *t_out);
 
 // intersect_utils.c
 bool	min_pos(double t0, double t1, double *t);
-t_vec3 reflect(t_vec3 incident, t_vec3 normal);
+t_vec3 	reflect(t_vec3 incident, t_vec3 normal);
 
 #endif

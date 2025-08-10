@@ -6,15 +6,15 @@
 /*   By: pshcherb <pshcherb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 10:55:51 by pshcherb          #+#    #+#             */
-/*   Updated: 2025/08/03 17:18:03 by pshcherb         ###   ########.fr       */
+/*   Updated: 2025/08/06 15:38:44 by pshcherb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINIRT_H
 # define MINIRT_H 
 
-# define WIDTH 800
-# define HEIGHT 600
+# define WIDTH 400
+# define HEIGHT 400
 
 # include "parser.h"
 # include "math_utils.h"

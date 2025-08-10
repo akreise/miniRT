@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   id_element.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: akreise <akreise@student.42.fr>            +#+  +:+       +#+        */
+/*   By: pshcherb <pshcherb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 14:17:32 by pshcherb          #+#    #+#             */
-/*   Updated: 2025/07/20 19:02:58 by akreise          ###   ########.fr       */
+/*   Updated: 2025/08/05 23:43:51 by pshcherb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,5 +46,7 @@ int	parse_objects(char **tokens, t_scene *scene)
 		return (handle_plane(tokens, scene));
 	if (ft_strcmp(tokens[0], "cy") == 0)//цилиндр
 		return (handle_cylinder(tokens, scene));
+	if (ft_strcmp(tokens[0], "tr") == 0)
+		return (handle_triangle(tokens, scene));
 	return (0);//неизвестный обьяект
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   read_rt_file.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: akreise <akreise@student.42.fr>            +#+  +:+       +#+        */
+/*   By: pshcherb <pshcherb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 11:22:53 by pshcherb          #+#    #+#             */
-/*   Updated: 2025/07/28 19:31:24 by akreise          ###   ########.fr       */
+/*   Updated: 2025/08/06 00:28:47 by pshcherb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,16 @@ void	read_rt_file(const char *filename, t_app *app)
 	close(fd);// Закрываем файл
 }
 
+void	replace_tabs_with_spaces(char *line)
+{
+	while (*line)
+	{
+		if (*line == '\t')
+			*line = ' ';
+		line++;
+	}
+}
+
 // Обрабатывает одну строку из .rt файла: парсит и добавляет в сцену
 // line — строка из .rt файла (например, "sp 0,0,0 10 255,0,0")
 // scene — структура, в которую добавляем объект
@@ -46,6 +56,7 @@ void	process_line(char *line, t_app *app)
 
 	if (!line || !*line || line[0] == '\n')// Проверка: пустая строка или просто \n
 		return ;
+	replace_tabs_with_spaces(line);
 	tokens = ft_split(line, ' ');// Разделяем строку по пробелам: tokens[0] — тип (sp, pl, A, C и т.д.)
 	if (!tokens)
 		return ;

@@ -6,7 +6,7 @@
 #    By: pshcherb <pshcherb@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/18 18:00:47 by pshcherb          #+#    #+#              #
-#    Updated: 2025/05/12 11:08:26 by pshcherb         ###   ########.fr        #
+#    Updated: 2025/08/05 23:23:07 by pshcherb         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,12 +22,14 @@
 #                                                                              #
 # **************************************************************************** #
 
+
 NAME = libft.a
 
 CC = gcc
 FLAGS = -Wall -Werror -Wextra 
+BUILD_DIR = build
 
-SRCS =	get_next_line.c \
+SRCS =  get_next_line.c \
 	get_next_line_utils.c \
 	ft_atof.c \
 	ft_printf.c \
@@ -71,21 +73,22 @@ SRCS =	get_next_line.c \
 	ft_putendl_fd.c \
 	ft_putnbr_fd.c \
 	ft_strcmp.c \
-
-OBJS =	$(SRCS:.c=.o)
-DEPS =	$(SRCS:.c=.d)
+	
+OBJS = $(patsubst %.c,$(BUILD_DIR)/%.o,$(SRCS))
+DEPS =  $(SRCS:.c=.d)
 
 all: $(NAME)
 
 $(NAME):    $(OBJS)
 	ar rcs $(NAME) $(OBJS)
 
-%.o: %.c Makefile 
+$(BUILD_DIR)/%.o: %.c Makefile 
+	@mkdir -p $(dir $@)
 	$(CC) $(FLAGS) -MMD -c $< -o $@
 
 clean:
-	rm -f $(OBJS) $(DEPS)
-    
+	rm -rf $(BUILD_DIR)
+	
 fclean: clean
 	rm -f $(NAME)
 

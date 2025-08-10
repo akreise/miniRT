@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: akreise <akreise@student.42.fr>            +#+  +:+       +#+        */
+/*   By: pshcherb <pshcherb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 10:56:06 by pshcherb          #+#    #+#             */
-/*   Updated: 2025/07/28 19:33:51 by akreise          ###   ########.fr       */
+/*   Updated: 2025/08/06 00:29:32 by pshcherb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ typedef struct s_app t_app;
 // read_rt_file.c
 void	read_rt_file(const char *filename, t_app *app);
 void	process_line(char *line, t_app *app);
+void	replace_tabs_with_spaces(char *line);
 
 // id_element.c
 int     id_element(char **tokens, t_scene *scene);
@@ -40,6 +41,7 @@ int	    handle_light(char **tokens, t_scene *scene);
 int	    handle_sphere(char **tokens, t_scene *scene);
 int	    handle_plane(char **tokens, t_scene *scene);
 int	    handle_cylinder(char **tokens, t_scene *scene);
+int     handle_triangle(char **tokens, t_scene *scene);
 
 // parsing_utils.c
 void	free_tokens(char **tokens);

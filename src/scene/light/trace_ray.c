@@ -6,7 +6,7 @@
 /*   By: pshcherb <pshcherb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/26 12:05:31 by pshcherb          #+#    #+#             */
-/*   Updated: 2025/08/03 17:18:41 by pshcherb         ###   ########.fr       */
+/*   Updated: 2025/08/05 23:48:21 by pshcherb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +90,43 @@ void    trace_plane(t_color *color, double *closest, t_ray ray, t_scene *scene, 
 	}
 }
 
+void trace_triangle(t_color *color, double *closest, t_ray ray, t_scene *scene, int depth)
+{
+	t_triangle *tri = scene->triangles;
+	t_vec3 hit_point;
+	t_vec3 normal;
+	double t;
+
+	while (tri)
+	{
+		if (intersect_triangle(ray, tri, &t) && t < *closest)
+		{
+			hit_point = ray_at(ray, t);
+
+			// Нормаль треугольника вычисляется по ребрам
+			t_vec3 edge1 = vec3_sub(tri->v1, tri->v0);
+			t_vec3 edge2 = vec3_sub(tri->v2, tri->v0);
+			normal = vec3_normalize(vec3_cross(edge1, edge2));
+
+			t_color local_color = compute_lighting(hit_point, normal, tri->color, tri->specular, scene, scene->camera.position);
+
+			if (tri->reflectivity > 0)
+			{
+				t_vec3 reflected_dir = vec3_normalize(reflect(ray.direction, normal));
+				t_ray reflected_ray = create_ray(vec3_add(hit_point, vec3_scale(normal, 1e-4)), reflected_dir);
+
+				t_color reflected_color = trace_ray(reflected_ray, scene, depth + 1);
+				local_color = color_blend(local_color, reflected_color, tri->reflectivity);
+			}
+
+			*color = local_color;
+			*closest = t;
+		}
+		tri = tri->next;
+	}
+}
+
+
 // Проверяет пересечение луча со всеми сферами в сцене
 void    trace_sphere(t_color *color, double *closest, t_ray ray, t_scene *scene, int depth)
 {
@@ -139,6 +176,7 @@ t_color trace_ray(t_ray ray, t_scene *scene, int depth)
     trace_sphere(&color, &closest, ray, scene, depth);
     trace_cylinder(&color, &closest, ray, scene, depth);
     trace_plane(&color, &closest, ray, scene, depth);
+	trace_triangle(&color, &closest, ray, scene, depth);
 
     return color;
 
@@ -158,6 +196,7 @@ t_color trace_ray_recursive(t_ray ray, t_scene *scene, int depth)
 	trace_sphere(&color, &closest, ray, scene, depth - 1);
 	trace_plane(&color, &closest, ray, scene, depth - 1);
 	trace_cylinder(&color, &closest, ray, scene, depth - 1);
+	trace_triangle(&color, &closest, ray, scene, depth - 1); 
 
 	return color;
 }

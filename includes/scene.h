@@ -6,7 +6,7 @@
 /*   By: pshcherb <pshcherb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 10:56:38 by pshcherb          #+#    #+#             */
-/*   Updated: 2025/08/03 16:10:18 by pshcherb         ###   ########.fr       */
+/*   Updated: 2025/08/05 23:42:02 by pshcherb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,15 @@
 # define SCENE_H
 
 typedef struct	s_vec3 {
-    double	x;
-    double	y;
-    double	z;
+	double	x;
+	double	y;
+	double	z;
 } t_vec3;
 
 typedef struct	s_color {
-    int	r;
-    int	g;
-    int	b;
+	int	r;
+	int	g;
+	int	b;
 } t_color;
 
 typedef struct  s_ambient {
@@ -72,13 +72,24 @@ typedef struct s_cylinder {
 	struct s_cylinder 	*next;
 } t_cylinder;
 
+typedef struct s_triangle {
+	t_vec3 v0;
+	t_vec3 v1;
+	t_vec3 v2;
+	t_color color;
+	double reflectivity;
+	double specular;
+	struct s_triangle *next;
+} t_triangle;
+
 typedef struct s_scene {
-	t_ambient    ambient;
-	t_camera     camera;
-	t_light      *lights;
-	t_sphere     *spheres;
-	t_plane      *planes;
-	t_cylinder   *cylinders;
+	t_ambient	ambient;
+	t_camera	camera;
+	t_light		*lights;
+	t_sphere	*spheres;
+	t_plane		*planes;
+	t_cylinder	*cylinders;
+	t_triangle	*triangles;
 } t_scene;
 
 typedef struct s_image {

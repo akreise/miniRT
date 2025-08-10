@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   check.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: akreise <akreise@student.42.fr>            +#+  +:+       +#+        */
+/*   By: pshcherb <pshcherb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 17:22:22 by akreise           #+#    #+#             */
-/*   Updated: 2025/07/23 17:32:16 by akreise          ###   ########.fr       */
+/*   Updated: 2025/08/05 23:55:12 by pshcherb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,10 @@ int check_rt_file(const char *filename)
         if (trim[0] == 'A') ambient_count++;
         else if (trim[0] == 'C') camera_count++;
         else if (trim[0] == 'L') light_count++;
-        else if (ft_strncmp(trim, "sp", 2) == 0 || ft_strncmp(trim, "pl", 2) == 0 || ft_strncmp(trim, "cy", 2) == 0)
+        else if (ft_strncmp(trim, "sp", 2) == 0 || 
+                ft_strncmp(trim, "pl", 2) == 0 || 
+                ft_strncmp(trim, "cy", 2) == 0 ||
+                ft_strncmp(trim, "tr", 2) == 0)
             has_object = 1;
 
         free(trim);
@@ -96,5 +99,7 @@ int validate_line_tokens(char **tokens)
         return (printf("Error: Plane must have 4 parameters\n"), 0);
     if (ft_strcmp(tokens[0], "cy") == 0 && count != 6)
         return (printf("Error: Cylinder must have 6 parameters\n"), 0);
+    if (ft_strcmp(tokens[0], "tr") == 0 && count != 6)
+        return (printf("Error: Triangle must have 6 parameters\n"), 0);
     return (1);
 }

@@ -6,7 +6,7 @@
 /*   By: akreise <akreise@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/19 17:50:29 by akreise           #+#    #+#             */
-/*   Updated: 2025/07/21 16:49:52 by akreise          ###   ########.fr       */
+/*   Updated: 2025/08/10 20:54:02 by akreise          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,7 @@ void initialize_scene(t_scene *scene)
     scene->planes = NULL;
     scene->cylinders = NULL;
     scene->lights = NULL;
+	scene->triangles = NULL;
     
     // Initialize camera with default values
     scene->camera.position = (t_vec3){0, 0, 0};

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   read_rt_file.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pshcherb <pshcherb@student.42.fr>          +#+  +:+       +#+        */
+/*   By: akreise <akreise@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 11:22:53 by pshcherb          #+#    #+#             */
-/*   Updated: 2025/08/06 00:28:47 by pshcherb         ###   ########.fr       */
+/*   Updated: 2025/08/11 18:11:03 by akreise          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ void	replace_tabs_with_spaces(char *line)
 	}
 }
 
+
 // Обрабатывает одну строку из .rt файла: парсит и добавляет в сцену
 // line — строка из .rt файла (например, "sp 0,0,0 10 255,0,0")
 // scene — структура, в которую добавляем объект
@@ -60,6 +61,12 @@ void	process_line(char *line, t_app *app)
 	tokens = ft_split(line, ' ');// Разделяем строку по пробелам: tokens[0] — тип (sp, pl, A, C и т.д.)
 	if (!tokens)
 		return ;
+	if (!validate_line_tokens(tokens)) // <<< проверка формата строки
+    {
+        free_tokens(tokens);
+        cleanup_and_exit(app, 1);
+        return;
+    }
 	if (!id_element(tokens, &app->scene))// Распознаём тип элемента и вызываем нужный обработчик (handle_*)
 	{
 		free_tokens(tokens);

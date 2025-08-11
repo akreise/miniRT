@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   check.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pshcherb <pshcherb@student.42.fr>          +#+  +:+       +#+        */
+/*   By: akreise <akreise@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 17:22:22 by akreise           #+#    #+#             */
-/*   Updated: 2025/08/05 23:55:12 by pshcherb         ###   ########.fr       */
+/*   Updated: 2025/08/11 19:26:12 by akreise          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ int check_rt_file(const char *filename)
                 ft_strncmp(trim, "tr", 2) == 0)
             has_object = 1;
 
-        free(trim);
+        free(trim); 
     }
     close(fd);
 
@@ -81,13 +81,30 @@ int is_file_empty(const char *filename)
     return (size == 0);
 }
 
+static int is_valid_identifier(const char *id)
+{
+    return (
+        ft_strcmp(id, "A") == 0 ||
+        ft_strcmp(id, "C") == 0 ||
+        ft_strcmp(id, "L") == 0 ||
+        ft_strcmp(id, "sp") == 0 ||
+        ft_strcmp(id, "pl") == 0 ||
+        ft_strcmp(id, "cy") == 0 ||
+        ft_strcmp(id, "tr") == 0
+    );
+}
+
 int validate_line_tokens(char **tokens)
 {
     int count = 0;
     while (tokens[count])
         count++;
-
-    if (ft_strcmp(tokens[0], "A") == 0 && count != 3)
+    if (!is_valid_identifier(tokens[0]))
+    {
+       ft_printf("Error: element '%s' has an invalid identifier\n", tokens[0]);
+        return (0);
+    }
+    /*if (ft_strcmp(tokens[0], "A") == 0 && count != 3)
         return (printf("Error: Ambient must have 3 parameters\n"), 0);
     if (ft_strcmp(tokens[0], "C") == 0 && count != 4)
         return (printf("Error: Camera must have 4 parameters\n"), 0);
@@ -100,6 +117,6 @@ int validate_line_tokens(char **tokens)
     if (ft_strcmp(tokens[0], "cy") == 0 && count != 6)
         return (printf("Error: Cylinder must have 6 parameters\n"), 0);
     if (ft_strcmp(tokens[0], "tr") == 0 && count != 6)
-        return (printf("Error: Triangle must have 6 parameters\n"), 0);
+        return (printf("Error: Triangle must have 6 parameters\n"), 0);*/
     return (1);
 }

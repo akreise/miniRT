@@ -3,15 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   id_element.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pshcherb <pshcherb@student.42.fr>          +#+  +:+       +#+        */
+/*   By: akreise <akreise@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 14:17:32 by pshcherb          #+#    #+#             */
-/*   Updated: 2025/08/05 23:43:51 by pshcherb         ###   ########.fr       */
+/*   Updated: 2025/08/11 18:11:39 by akreise          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/parser.h"
 #include "../../includes/scene.h"
+
 
 //Главная точка входа для определения, что именно содержится в строке .rt файла
 int	id_element(char **tokens, t_scene *scene)

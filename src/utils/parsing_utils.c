@@ -6,7 +6,7 @@
 /*   By: akreise <akreise@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 13:58:30 by pshcherb          #+#    #+#             */
-/*   Updated: 2025/07/20 19:32:06 by akreise          ###   ########.fr       */
+/*   Updated: 2025/08/13 13:55:41 by akreise          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ t_color	parse_color(char *str)
 	if (!is_valid_color_value(color.r) || !is_valid_color_value(color.g)
 		|| !is_valid_color_value(color.b))// Проверяем, что значения находятся в допустимом диапазоне
 	{
-		ft_printf("Error: Color values out of range (0-255): %s\n", str);
+		ft_printf("Error: Color values out of range [0-255]: %s\n", str);
 		color = (t_color){0, 0, 0};
 	}
 	free_tokens(values);// Освобождаем память

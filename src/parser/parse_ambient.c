@@ -6,11 +6,12 @@
 /*   By: akreise <akreise@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 11:49:06 by pshcherb          #+#    #+#             */
-/*   Updated: 2025/07/28 18:33:04 by akreise          ###   ########.fr       */
+/*   Updated: 2025/08/13 13:42:33 by akreise          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/parser.h"
+#include "../../includes/miniRT.h"
 #include "../../includes/math_utils.h"
 
 // Обработка строки с параметрами Ambient light из .rt файла
@@ -61,6 +62,11 @@ int	handle_camera(char **tokens, t_scene *scene)
 	{
 		ft_printf("Error: Camera orientation vector cannot be zero\n");
 		return (0);
+	}
+	if (!check_vec3_range(scene->camera.orientation, -1.0, 1.0))
+	{
+   		ft_printf("Error: Camera orientation vector out of range [-1,1]\n");
+    	return (0);
 	}
 	scene->camera.orientation = vec3_normalize(scene->camera.orientation);
 	scene->camera.fov = ft_atof(tokens[3]);	// Парсинг угла обзора (FOV)

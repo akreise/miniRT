@@ -6,7 +6,7 @@
 /*   By: akreise <akreise@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 17:22:22 by akreise           #+#    #+#             */
-/*   Updated: 2025/08/11 19:26:12 by akreise          ###   ########.fr       */
+/*   Updated: 2025/08/13 13:39:51 by akreise          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,15 @@ int check_rt_file(const char *filename)
 
     return (1);
 }
+
+
+int check_vec3_range(t_vec3 v, double min, double max)
+{
+    return (v.x >= min && v.x <= max &&
+            v.y >= min && v.y <= max &&
+            v.z >= min && v.z <= max);
+}
+
 
 int is_file_empty(const char *filename)
 {

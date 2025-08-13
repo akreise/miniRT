@@ -6,7 +6,7 @@
 /*   By: akreise <akreise@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 10:55:51 by pshcherb          #+#    #+#             */
-/*   Updated: 2025/08/10 20:56:17 by akreise          ###   ########.fr       */
+/*   Updated: 2025/08/13 13:43:35 by akreise          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,7 @@ void 	initialize_scene(t_scene *scene);
 //check
 int 	has_rt_extension(const char *filename);
 int 	is_file_empty(const char *filename);
+int     check_vec3_range(t_vec3 v, double min, double max);
 int 	validate_scene(t_scene *scene);
 int 	validate_line_tokens(char **tokens);
 int 	check_rt_file(const char *filename);

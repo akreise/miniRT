@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   parse_objects.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pshcherb <pshcherb@student.42.fr>          +#+  +:+       +#+        */
+/*   By: akreise <akreise@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 11:51:05 by pshcherb          #+#    #+#             */
-/*   Updated: 2025/08/05 23:43:03 by pshcherb         ###   ########.fr       */
+/*   Updated: 2025/08/13 13:44:25 by akreise          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/parser.h"
+#include "../../includes/miniRT.h"
 #include "../../includes/math_utils.h"
 
 // Обрабатывает строку, описывающую сферу
@@ -69,6 +70,19 @@ int	handle_plane(char **tokens, t_scene *scene)
 		return (ft_printf("Error: Memory allocation failed for Plane"), 0);
 	plane->point = parse_vec3(tokens[1]);// Парсим точку, нормаль и цвет
 	plane->normal = parse_vec3(tokens[2]);
+	if (vec3_length(plane->normal) == 0.0)
+	{
+    	ft_printf("Error: Plane normal vector cannot be zero\n");
+    	free(plane);
+    	return (0);
+	}
+	if (!check_vec3_range(plane->normal, -1.0, 1.0))
+	{
+   		ft_printf("Error: Plane normal vector out of range [-1,1]\n");
+    	free(plane);
+    	return (0);
+	}
+	plane->normal = vec3_normalize(plane->normal);
 	plane->color = parse_color(tokens[3]);
 	if (tokens[4])
 	{
@@ -83,12 +97,6 @@ int	handle_plane(char **tokens, t_scene *scene)
 		plane->reflectivity = 0.0;
 		plane->specular = 0;
 	}	
-	if (fabs(vec3_length(plane->normal) - 1.0) > 0.001)// Проверка, что нормаль нормализована
-	{
-		ft_printf("Error: Plane normal vector is not normalized\n");
-		free(plane);
-		return (0);
-	}
 	plane->next = scene->planes;
 	scene->planes = plane;
 	return (1);
@@ -136,6 +144,12 @@ int	handle_cylinder(char **tokens, t_scene *scene)
 		ft_printf("Error: Cylinder direction vector cannot be zero\n");
 		free(cylinder);
 		return (0);
+	}
+	if (!check_vec3_range(cylinder->direction, -1.0, 1.0))
+	{
+   		ft_printf("Error: Cylinder direction vector out of range [-1,1]\n");
+    	free(cylinder);
+    	return (0);
 	}
 	cylinder->direction = vec3_normalize(cylinder->direction);// Нормализуем вектор направления
 	cylinder->radius = ft_atof(tokens[3]) / 2.0;

@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: pshcherb <pshcherb@student.42.fr>          +#+  +:+       +#+         #
+#    By: akreise <akreise@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/06 10:54:27 by pshcherb          #+#    #+#              #
-#    Updated: 2025/08/06 11:36:25 by pshcherb         ###   ########.fr        #
+#    Updated: 2025/08/11 21:01:39 by akreise          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,7 +22,7 @@ BUILD_DIR = build
 ifeq ($(DEBUG), 1)
 	CFLAGS += -Wall -Wextra -Werror -g -fsanitize=address
 else
-	CFLAGS += -Wall -Wextra -Werror
+	CFLAGS += -Wall -Wextra -Werror -fsanitize=address
 endif
 
 INCLUDES = -I$(MLX_DIR) -I/usr/local/include $(shell pkg-config --cflags x11)

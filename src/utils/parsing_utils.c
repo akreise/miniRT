@@ -6,7 +6,7 @@
 /*   By: akreise <akreise@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 13:58:30 by pshcherb          #+#    #+#             */
-/*   Updated: 2025/08/13 13:55:41 by akreise          ###   ########.fr       */
+/*   Updated: 2025/08/13 15:33:55 by akreise          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,9 +66,8 @@ t_vec3	parse_vec3(char *str)
 // Парсит строку формата "R,G,B" в структуру t_color
 // Проверяет корректность диапазона [0-255]
 // Если ошибка — возвращает цвет (0, 0, 0) и печатает сообщение
-t_color	parse_color(char *str)
+int parse_color(char *str, t_color *color)
 {
-	t_color		color;
 	char		**values;
 
 	values = ft_split(str, ',');// Разбиваем строку на три части по запятой
@@ -76,17 +75,17 @@ t_color	parse_color(char *str)
 	{
 		ft_printf("Error: Invalid color format: %s\n", str);
 		free_tokens(values);
-		return ((t_color){0, 0, 0});
+		return (0);
 	}// Преобразуем строки в целые числа
-	color.r = ft_atoi(values[0]);
-	color.g = ft_atoi(values[1]);
-	color.b = ft_atoi(values[2]);
-	if (!is_valid_color_value(color.r) || !is_valid_color_value(color.g)
-		|| !is_valid_color_value(color.b))// Проверяем, что значения находятся в допустимом диапазоне
+	color->r = ft_atoi(values[0]);
+	color->g = ft_atoi(values[1]);
+	color->b = ft_atoi(values[2]);
+	free_tokens(values);// Освобождаем память
+	if (!is_valid_color_value(color->r) || !is_valid_color_value(color->g)
+		|| !is_valid_color_value(color->b))// Проверяем, что значения находятся в допустимом диапазоне
 	{
 		ft_printf("Error: Color values out of range [0-255]: %s\n", str);
-		color = (t_color){0, 0, 0};
+		return (0);// ошибка
 	}
-	free_tokens(values);// Освобождаем память
-	return (color);
+	return (1);// успешно
 }

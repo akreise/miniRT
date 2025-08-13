@@ -6,7 +6,7 @@
 /*   By: akreise <akreise@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 11:22:53 by pshcherb          #+#    #+#             */
-/*   Updated: 2025/08/11 18:11:03 by akreise          ###   ########.fr       */
+/*   Updated: 2025/08/13 15:33:22 by akreise          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,12 @@ void	replace_tabs_with_spaces(char *line)
 	}
 }
 
+static void trim_newline(char *line)
+{
+    size_t len = ft_strlen(line);
+    if (len > 0 && line[len - 1] == '\n')
+        line[len - 1] = '\0';
+}
 
 // Обрабатывает одну строку из .rt файла: парсит и добавляет в сцену
 // line — строка из .rt файла (например, "sp 0,0,0 10 255,0,0")
@@ -58,6 +64,7 @@ void	process_line(char *line, t_app *app)
 	if (!line || !*line || line[0] == '\n')// Проверка: пустая строка или просто \n
 		return ;
 	replace_tabs_with_spaces(line);
+	trim_newline(line);
 	tokens = ft_split(line, ' ');// Разделяем строку по пробелам: tokens[0] — тип (sp, pl, A, C и т.д.)
 	if (!tokens)
 		return ;

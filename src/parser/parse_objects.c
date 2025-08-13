@@ -6,7 +6,7 @@
 /*   By: akreise <akreise@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 11:51:05 by pshcherb          #+#    #+#             */
-/*   Updated: 2025/08/13 13:44:25 by akreise          ###   ########.fr       */
+/*   Updated: 2025/08/13 14:15:10 by akreise          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,11 @@ int	handle_sphere(char **tokens, t_scene *scene)
 		return (ft_printf("Error: Memory allocation failed for Sphere\n"), 0);
 	sphere->center = parse_vec3(tokens[1]);// Парсим параметры
 	sphere->radius = ft_atof(tokens[2]) / 2.0;// Диаметр делим на 2
-	sphere->color = parse_color(tokens[3]);
+	if (!parse_color(tokens[3], &sphere->color))
+	{
+    	free(sphere);
+    	return (0); // выходим с ошибкой
+	}
 	if (tokens[4])
 	{
 		sphere->reflectivity = ft_atof(tokens[4]);
@@ -83,7 +87,11 @@ int	handle_plane(char **tokens, t_scene *scene)
     	return (0);
 	}
 	plane->normal = vec3_normalize(plane->normal);
-	plane->color = parse_color(tokens[3]);
+	if (!parse_color(tokens[3], &plane->color))
+	{
+    	free(plane);
+    	return (0); // выходим с ошибкой
+	}
 	if (tokens[4])
 	{
 		plane->reflectivity = ft_atof(tokens[4]);
@@ -154,7 +162,11 @@ int	handle_cylinder(char **tokens, t_scene *scene)
 	cylinder->direction = vec3_normalize(cylinder->direction);// Нормализуем вектор направления
 	cylinder->radius = ft_atof(tokens[3]) / 2.0;
 	cylinder->height = ft_atof(tokens[4]);
-	cylinder->color = parse_color(tokens[5]);
+	if (!parse_color(tokens[5], &cylinder->color))
+	{
+    	free(cylinder);
+    	return (0); // выходим с ошибкой
+	}
 	if (tokens[6])
 	{
 		cylinder->reflectivity = ft_atof(tokens[6]);
@@ -199,8 +211,11 @@ int handle_triangle(char **tokens, t_scene *scene)
 	tri->v0 = parse_vec3(tokens[1]);
 	tri->v1 = parse_vec3(tokens[2]);
 	tri->v2 = parse_vec3(tokens[3]);
-	tri->color = parse_color(tokens[4]);
-
+	if (!parse_color(tokens[4], &tri->color))
+	{
+    	free(tri);
+    	return (0); // выходим с ошибкой
+	}
 	if (tokens[5])
 	{
 		tri->reflectivity = ft_atof(tokens[5]);

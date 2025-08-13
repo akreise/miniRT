@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pshcherb <pshcherb@student.42.fr>          +#+  +:+       +#+        */
+/*   By: akreise <akreise@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 10:56:06 by pshcherb          #+#    #+#             */
-/*   Updated: 2025/08/06 00:29:32 by pshcherb         ###   ########.fr       */
+/*   Updated: 2025/08/13 14:07:24 by akreise          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ int     handle_triangle(char **tokens, t_scene *scene);
 void	free_tokens(char **tokens);
 int     is_valid_color_value(int value);
 double 	vec3_length(t_vec3 vec);
-t_color	parse_color(char *str);
+int     parse_color(char *str, t_color *color);
 t_vec3	parse_vec3(char *str);
 
 #endif 

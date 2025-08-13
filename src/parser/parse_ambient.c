@@ -6,7 +6,7 @@
 /*   By: akreise <akreise@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 11:49:06 by pshcherb          #+#    #+#             */
-/*   Updated: 2025/08/13 13:42:33 by akreise          ###   ########.fr       */
+/*   Updated: 2025/08/13 14:28:45 by akreise          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,12 +34,13 @@ int	handle_ambient(char **tokens, t_scene *scene)
 			ratio);
 		return (0);
 	}
-	color = parse_color(tokens[2]);// Парсинг цвета из строки формата "R,G,B"
-	if (color.r == 0 && color.g == 0 && color.b == 0)// Проверка, цвет успешно распознан (не черный по умолчанию)
+	if (!parse_color(tokens[2], &color))
+        return (0); // ошибка при парсинге цвет
+	/*if (color.r == 0 && color.g == 0 && color.b == 0)// Проверка, цвет успешно распознан (не черный по умолчанию)
 		{
 			ft_printf("Error: Failed to parse color for Ambient light\n");
 			return (0);
-		}
+		}*/
 	// Сохранение параметров ambient light в структуре сцены
 	scene->ambient.ratio = ratio;
 	scene->ambient.color = color;
@@ -96,7 +97,12 @@ int	handle_light(char **tokens, t_scene *scene)
 		return (ft_printf("Error: Memory allocation failed for Light\n"), 0);
 	light->position = parse_vec3(tokens[1]);// Парсинг позиции света
 	light->brightness = ft_atof(tokens[2]);// Парсинг яркости света
-	light->color = parse_color(tokens[3]);// Парсинг цвета света
+	if (!parse_color(tokens[3], &light->color))
+	{
+    	free(light);
+    	return (0); // выходим с ошибкой
+	}
+
 	if (light->brightness < 0.0 || light->brightness > 1.0)// Проверка диапазона яркости [0.0, 1.0]
 	{
 		ft_printf("Error: Light brightness out of range [0.0, 1.0]: %f\n",

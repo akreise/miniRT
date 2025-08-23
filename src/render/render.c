@@ -6,7 +6,7 @@
 /*   By: pshcherb <pshcherb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/26 17:38:34 by pshcherb          #+#    #+#             */
-/*   Updated: 2025/08/03 15:57:36 by pshcherb         ###   ########.fr       */
+/*   Updated: 2025/08/23 19:05:20 by pshcherb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,57 +14,71 @@
 #include "../../includes/miniRT.h"
 #include <math.h>
 
-//генерация луча из камеры в пиксель (x, y) на экране
-t_ray camera_ray(t_camera camera, int x, int y)
+static t_ray	create_camera_ray(t_camera camera, double px, double py)
 {
-    t_ray ray;
+	t_ray	ray;
+	t_vec3	forward;
+	t_vec3	up;
+	t_vec3	right;
+	t_vec3	dir;
 
-	// Соотношение сторон экрана (ширина / высота)
-    double aspect_ratio = (double)WIDTH / HEIGHT;
-	// Угол обзора (FOV) переводим из градусов в радианы
-    double fov_rad = camera.fov * M_PI / 180.0;
-	// Преобразуем координаты пикселя в нормализованное пространство (от -1 до 1)
-    double px = (2 * ((x + 0.5) / WIDTH) - 1) * tan(fov_rad / 2.0) * aspect_ratio;
-    double py = (1 - 2 * ((y + 0.5) / HEIGHT)) * tan(fov_rad / 2.0);
-
-    // Создадим ортонормированный базис камеры:
-    t_vec3 forward = vec3_normalize(camera.orientation);
-	// Вектор "вверх". По умолчанию (0, 1, 0)
-    t_vec3 up = (t_vec3){0, 1, 0};
-	// Если камера смотрит почти вертикально — меняем "вверх", чтобы не было проблем с cross product
-    if (fabs(forward.y) > 0.999)
-        up = (t_vec3){0, 0, 1};
-	// Вычисляем вектор "вправо" (right = forward × up)
-    t_vec3 right = vec3_normalize(vec3_cross(forward, up));
-	// Пересчитываем "вверх", чтобы он был ортогонален forward и right
-    up = vec3_cross(right, forward);
-
-    // Составляем направление луча: px * right + py * up + forward
-    t_vec3 dir = vec3_add(vec3_add(vec3_scale(right, px), vec3_scale(up, py)), forward);
-    // Начало луча — позиция камеры
+	forward = vec3_normalize(camera.orientation);
+	up = (t_vec3){0, 1, 0};
+	if (fabs(forward.y) > 0.999)
+		up = (t_vec3){0, 0, 1};
+	right = vec3_normalize(vec3_cross(forward, up));
+	up = vec3_cross(right, forward);
+	dir = vec3_add(vec3_scale(right, px), vec3_scale(up, py));
+	dir = vec3_add(dir, forward);
 	ray.origin = camera.position;
-	// Направление нормализуем (иначе длина может быть > 1)
-    ray.direction = vec3_normalize(dir);
-
-    return ray;
+	ray.direction = vec3_normalize(dir);
+	return (ray);
 }
 
-void render_full_scene(t_app *app)
+t_ray	camera_ray(t_camera camera, int x, int y)
 {
-    t_scene *scene = &app->scene;
-    
-    for (int y = 0; y < HEIGHT; y++)
-    {
-        for (int x = 0; x < WIDTH; x++)
-        {
-            // Use your existing camera_ray function
-            t_ray ray = camera_ray(scene->camera, x, y);
-            
-            // Use your existing trace_ray function for full scene
-            t_color color = trace_ray(ray, scene, 0);
-            
-            int rgb_color = color_to_int(color);
-            put_pixel(&app->mlx_data.img, x, y, rgb_color);
-        }
-    }
+	t_ray		ray;
+	double		aspect_ratio;
+	double		fov_rad;
+	double		px;
+	double		py;
+
+	aspect_ratio = (double)WIDTH / HEIGHT;
+	fov_rad = camera.fov * M_PI / 180.0;
+	px = (2 * ((x + 0.5) / WIDTH) - 1) * tan(fov_rad / 2.0) * aspect_ratio;
+	py = (1 - 2 * ((y + 0.5) / HEIGHT)) * tan(fov_rad / 2.0);
+	ray = create_camera_ray(camera, px, py);
+	return (ray);
+}
+
+static void	render_row(t_app *app, int y)
+{
+	t_scene	*scene;
+	t_ray	ray;
+	t_color	color;
+	int		rgb_color;
+	int		x;
+
+	scene = &app->scene;
+	x = 0;
+	while (x < WIDTH)
+	{
+		ray = camera_ray(scene->camera, x, y);
+		color = trace_ray(ray, scene, 0);
+		rgb_color = color_to_int(color);
+		put_pixel(&app->mlx_data.img, x, y, rgb_color);
+		x++;
+	}
+}
+
+void	render_full_scene(t_app *app)
+{
+	int	y;
+
+	y = 0;
+	while (y < HEIGHT)
+	{
+		render_row(app, y);
+		y++;
+	}
 }

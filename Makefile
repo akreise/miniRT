@@ -6,7 +6,7 @@
 #    By: pshcherb <pshcherb@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/06 10:54:27 by pshcherb          #+#    #+#              #
-#    Updated: 2025/08/23 16:58:15 by pshcherb         ###   ########.fr        #
+#    Updated: 2025/08/23 18:00:33 by pshcherb         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -47,6 +47,7 @@ SRC = \
 	src/math/intersect_plane.c \
 	src/math/intersect_triangle.c \
 	src/math/ray.c \
+	src/math/cylinder_utils.c \
 	src/scene/light/color_combine.c \
 	src/scene/light/lighting_calculation.c \
 	src/scene/light/trace_ray.c \

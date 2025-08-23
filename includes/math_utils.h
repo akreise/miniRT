@@ -6,7 +6,7 @@
 /*   By: pshcherb <pshcherb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 10:56:28 by pshcherb          #+#    #+#             */
-/*   Updated: 2025/08/23 16:43:41 by pshcherb         ###   ########.fr       */
+/*   Updated: 2025/08/23 18:07:37 by pshcherb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,11 @@ bool	intersect_sphere(t_ray ray, t_sphere *sphere, double *t);
 
 // intercect_cylinder.c
 bool	intersect_cylinder(t_ray ray, t_cylinder *cylinder, double *t);
+
+// cylinder_utils.c
+t_cyl_i	init_cylinder_i(t_ray ray, t_cylinder *cylinder, t_cyl_i cyl);
+bool	intersect_caps(t_ray ray, t_cylinder *cylinder, double *t);
+bool	intersect_disk(t_vec3 center, t_vec3 normal, t_ray ray, double *t_out);
 
 bool	intersect_triangle(t_ray ray, t_triangle *tri, double *t_out);
 

@@ -102,4 +102,9 @@ void	free_scene(t_scene *scene);
 void	cleanup_mlx(t_mlx_data *data);
 void	cleanup_and_exit(t_app *app, int msg);
 
+// main
+int		validate_arguments(int argc, char **argv);
+int		init_mlx(t_app *app);
+void	init_app(t_app *app);
+
 #endif

@@ -68,7 +68,8 @@ SRC = \
 	src/check/check_duplicates.c \
 	src/clean/clean.c \
 	src/clean/clean_mlx.c \
-	main.c
+	src/main/main.c \
+	src/main/main_init.c
 
 HEADERS = includes/math_utils.h \
 	includes/miniRT.h \

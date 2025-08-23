@@ -3,19 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   vec3_scalar_normal.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: akreise <akreise@student.42.fr>            +#+  +:+       +#+        */
+/*   By: pshcherb <pshcherb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 14:28:41 by pshcherb          #+#    #+#             */
-/*   Updated: 2025/07/20 18:51:07 by akreise          ###   ########.fr       */
+/*   Updated: 2025/08/23 18:36:40 by pshcherb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/math_utils.h"
 
-//умножение вектора на скаляр - Меняет длину вектора, сохраняя его направление.
 t_vec3	vec3_scale(t_vec3 v, double scalar)
 {
-	// Умножаем каждую компоненту вектора на число (scalar)
 	return ((t_vec3){
 		v.x * scalar,
 		v.y * scalar,
@@ -23,16 +21,12 @@ t_vec3	vec3_scale(t_vec3 v, double scalar)
 	});
 }
 
-//нормализация вектора - Преобразует вектор в единичный — длиной ровно 1
 t_vec3	vec3_normalize(t_vec3 v)
 {
 	double	length;
 
-	// Вычисляем длину вектора
 	length = vec3_length(v);
-	// Если длина нулевая, вернуть вектор {0, 0, 0}
 	if (length == 0)
 		return ((t_vec3){0, 0, 0});
-	// Делим каждую компоненту на длину (получаем единичный вектор)
 	return (vec3_scale(v, 1.0 / length));
 }

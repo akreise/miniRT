@@ -6,7 +6,7 @@
 /*   By: pshcherb <pshcherb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/26 12:05:31 by pshcherb          #+#    #+#             */
-/*   Updated: 2025/08/05 23:48:21 by pshcherb         ###   ########.fr       */
+/*   Updated: 2025/08/23 15:00:16 by pshcherb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,15 +17,24 @@
 // Вычисляет нормаль (перпендикуляр) к боковой поверхности цилиндра в точке пересечения
 t_vec3	get_cylinder_normal(t_cylinder *cy, t_vec3 hit)
 {
-	t_vec3 from_base;// Вектор от основания цилиндра до точки попадания луча
-	double proj;// Проекция этого вектора на ось цилиндра
-	t_vec3 proj_vec;// Вектор вдоль оси цилиндра, длиной как проекция
-
-	from_base = vec3_sub(hit, cy->base);
-	proj = vec3_dot(from_base, cy->direction);
-	proj_vec = vec3_scale(cy->direction, proj);
-	// Вычитаем проекцию из вектора from_base, чтобы получить нормаль к поверхности
-	return (vec3_normalize(vec3_sub(from_base, proj_vec)));
+	t_vec3 from_base = vec3_sub(hit, cy->base);
+	double proj = vec3_dot(from_base, cy->direction);
+	
+	// Check if hit is on bottom cap (within small tolerance)
+	if (proj <= 1e-6)
+	{
+		return vec3_scale(cy->direction, -1); // Normal points outward (down)
+	}
+	
+	// Check if hit is on top cap (within small tolerance)  
+	if (proj >= cy->height - 1e-6)
+	{
+		return cy->direction; // Normal points outward (up)
+	}
+	
+	// Hit is on side surface - calculate perpendicular normal
+	t_vec3 proj_vec = vec3_scale(cy->direction, proj);
+	return vec3_normalize(vec3_sub(from_base, proj_vec));
 }
 
 // Проверяет пересечение луча со всеми цилиндрами в сцене

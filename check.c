@@ -124,8 +124,6 @@ int validate_line_tokens(char **tokens)
     if (ft_strcmp(tokens[0], "pl") == 0 && count != 4)
         return (printf("Error: Plane must have 4 parameters\n"), 0);
     if (ft_strcmp(tokens[0], "cy") == 0 && count != 6)
-        return (printf("Error: Cylinder must have 6 parameters\n"), 0);
-    if (ft_strcmp(tokens[0], "tr") == 0 && count != 6)
-        return (printf("Error: Triangle must have 6 parameters\n"), 0);*/
+        return (printf("Error: Cylinder must have 6 parameters\n"), 0);*/
     return (1);
 }

@@ -57,21 +57,6 @@ typedef struct s_cyl_i
 	bool	valid;
 }	t_cyl_i;
 
-typedef struct s_triangle_i
-{
-	t_vec3	edge1;
-	t_vec3	edge2;
-	t_vec3	h;
-	t_vec3	s;
-	t_vec3	q;
-	double	a;
-	double	f;
-	double	u;
-	double	v;
-	double	t;
-	bool	valid;
-}	t_triangle_i;
-
 // vec3_add_sub.c
 t_vec3	vec3_add(t_vec3 a, t_vec3 b);
 t_vec3	vec3_sub(t_vec3 a, t_vec3 b);
@@ -101,8 +86,6 @@ bool	intersect_cylinder(t_ray ray, t_cylinder *cylinder, double *t);
 t_cyl_i	init_cylinder_i(t_ray ray, t_cylinder *cylinder, t_cyl_i cyl);
 bool	intersect_caps(t_ray ray, t_cylinder *cylinder, double *t);
 bool	intersect_disk(t_vec3 center, t_vec3 normal, t_ray ray, double *t_out);
-
-bool	intersect_triangle(t_ray ray, t_triangle *tri, double *t_out);
 
 // intersect_utils.c
 bool	min_pos(double t0, double t1, double *t);

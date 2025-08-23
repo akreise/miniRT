@@ -41,7 +41,6 @@ int		handle_light(char **tokens, t_scene *scene);
 int		handle_sphere(char **tokens, t_scene *scene);
 int		handle_plane(char **tokens, t_scene *scene);
 int		handle_cylinder(char **tokens, t_scene *scene);
-int		handle_triangle(char **tokens, t_scene *scene);
 
 // parsing_utils.c
 void	free_tokens(char **tokens);

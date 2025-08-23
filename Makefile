@@ -45,7 +45,6 @@ SRC = \
 	src/math/intersect_sphere.c \
 	src/math/intersect_cylinder.c \
 	src/math/intersect_plane.c \
-	src/math/intersect_triangle.c \
 	src/math/ray.c \
 	src/math/cylinder_utils.c \
 	src/scene/light/color_combine.c \

@@ -1,4 +1,13 @@
-/* ************************************************************************** */
+/* **************************************int	parse_objects(char **tokens, t_scene *scene)
+{
+	if (ft_strcmp(tokens[0], "sp") == 0)
+		return (handle_sphere(tokens, scene));
+	if (ft_strcmp(tokens[0], "pl") == 0)
+		return (handle_plane(tokens, scene));
+	if (ft_strcmp(tokens[0], "cy") == 0)
+		return (handle_cylinder(tokens, scene));
+	return (0);
+}************************ */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   id_element.c                                       :+:      :+:    :+:   */
@@ -47,7 +56,5 @@ int	parse_objects(char **tokens, t_scene *scene)
 		return (handle_plane(tokens, scene));
 	if (ft_strcmp(tokens[0], "cy") == 0)//цилиндр
 		return (handle_cylinder(tokens, scene));
-	if (ft_strcmp(tokens[0], "tr") == 0)
-		return (handle_triangle(tokens, scene));
 	return (0);//неизвестный обьяект
 }

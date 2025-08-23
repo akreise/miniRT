@@ -43,7 +43,6 @@ void	initialize_scene(t_scene *scene)
 	scene->planes = NULL;
 	scene->cylinders = NULL;
 	scene->lights = NULL;
-	scene->triangles = NULL;
 	scene->camera.position = (t_vec3){0, 0, 0};
 	scene->camera.orientation = (t_vec3){0, 0, 1};
 	scene->camera.fov = 70.0;

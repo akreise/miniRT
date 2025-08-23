@@ -37,6 +37,7 @@ SRC = \
 	src/parser/read_rt_file.c \
 	src/parser/id_element.c \
 	src/parser/parse_objects.c \
+	src/parser/parse_cylinder.c \
 	src/parser/parse_ambient.c \
 	src/init/init_mlx.c \
 	src/math/vec3_add_sub.c \

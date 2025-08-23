@@ -98,6 +98,7 @@ int		validate_line_tokens(char **tokens);
 int		check_rt_file(const char *filename);
 
 // clean
+void	free_scene(t_scene *scene);
 void	cleanup_mlx(t_mlx_data *data);
 void	cleanup_and_exit(t_app *app, int msg);
 

@@ -66,7 +66,8 @@ SRC = \
 	src/check/check_lighting.c \
 	src/check/check_scene.c \
 	src/check/check_duplicates.c \
-	clean.c \
+	src/clean/clean.c \
+	src/clean/clean_mlx.c \
 	main.c
 
 HEADERS = includes/math_utils.h \

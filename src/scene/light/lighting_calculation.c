@@ -6,110 +6,55 @@
 /*   By: pshcherb <pshcherb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 10:48:07 by pshcherb          #+#    #+#             */
-/*   Updated: 2025/08/03 17:16:53 by pshcherb         ###   ########.fr       */
+/*   Updated: 2025/08/23 20:21:58 by pshcherb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../includes/miniRT.h"
 #include "../../../includes/math_utils.h"
 
-// Вычисляет итоговый цвет в точке пересечения с учётом освещения: Ambient + Diffuse освещение
-// hit_point — точка пересечения луча и объекта
-// normal — нормаль в точке пересечения
-// obj_color — цвет объекта
-// scene — сцена (включает источник света и ambient)
-t_color compute_lighting(t_vec3 hit_point, t_vec3 normal, t_color obj_color,
-                         double specular, t_scene *scene, t_vec3 camera_pos)
+static void	init_lighting_calc(t_light_c *lc, t_color obj_color, t_scene *scene)
 {
-	t_light_c l;
-	t_color ambient_color = color_mul(obj_color, scene->ambient.color);
-	l.ambient = color_scale(ambient_color, scene->ambient.ratio);
-	l.diffuse_total = (t_color){0, 0, 0};
-	l.light = scene->lights;
+	t_color	ambient_color;
 
-	t_vec3 view_dir = vec3_normalize(vec3_sub(camera_pos, hit_point));
+	ambient_color = color_mul(obj_color, scene->ambient.color);
+	lc->ambient = color_scale(ambient_color, scene->ambient.ratio);
+	lc->diffuse_total = (t_color){0, 0, 0};
+	lc->light = scene->lights;
+}
 
-	while (l.light)
+static t_color	calculate_light_contribution(t_light_c *lc, t_vec3 hit_point,
+	t_vec3 normal, t_color obj_color)
+{
+	lc->light_dir = vec3_normalize(vec3_sub(lc->light->position, hit_point));
+	lc->dot = vec3_dot(normal, lc->light_dir);
+	if (lc->dot <= 0)
+		return ((t_color){0, 0, 0});
+	lc->intensity = lc->light->brightness * lc->dot;
+	return (color_scale(obj_color, lc->intensity));
+}
+
+static t_color	compute_lighting_internal(t_vec3 hit_point, t_vec3 normal,
+	t_color obj_color, t_scene *scene)
+{
+	t_light_c	lc;
+	t_color		light_contrib;
+
+	init_lighting_calc(&lc, obj_color, scene);
+	while (lc.light)
 	{
-		l.light_dir = vec3_sub(l.light->position, hit_point);
-		l.light_dir = vec3_normalize(l.light_dir);
-		l.dot = vec3_dot(normal, l.light_dir);
-		if (l.dot > 0)
-		{
-			double shadow = shadow_factor(hit_point, l.light, scene);
-			if (shadow > 0)
-			{
-				l.intensity = l.light->brightness * l.dot * shadow;
-				t_color diffuse = color_scale(obj_color, l.intensity);
-				l.diffuse_total = color_add(l.diffuse_total, diffuse);
-
-				if (specular > 0)
-				{
-					t_vec3 reflect_dir = reflect(vec3_scale(l.light_dir, -1), normal);
-					double spec = pow(fmax(vec3_dot(view_dir, reflect_dir), 0.0), specular);
-					t_color specular_color = color_scale(l.light->color, l.light->brightness * spec * shadow);
-					l.diffuse_total = color_add(l.diffuse_total, specular_color);
-				}
-			}
-		}
-		l.light = l.light->next;
+		light_contrib = calculate_light_contribution(&lc, hit_point,
+				normal, obj_color);
+		lc.diffuse_total = color_add(lc.diffuse_total, light_contrib);
+		lc.light = lc.light->next;
 	}
-	return (color_add(l.ambient, l.diffuse_total));
+	return (color_add(lc.ambient, lc.diffuse_total));
 }
 
-
-double shadow_factor(t_vec3 point, t_light *light, t_scene *scene)
+t_color	compute_lighting(t_vec3 hit_point, t_vec3 normal, t_color obj_color,
+	double specular, t_scene *scene, t_vec3 camera_pos)
 {
-	int blocked = 0;
-	int samples = 32; // Чем больше, тем мягче (но медленнее)
-	double radius = 0.5; // Размер источника света
-
-	for (int i = 0; i < samples; i++)
-	{
-		// Смещаем точку света немного случайно
-		t_vec3 offset = random_in_unit_disk();
-		t_vec3 offset3d = {
-			offset.x * radius,
-			offset.y * radius,
-			0
-		};
-		t_vec3 perturbed_light = vec3_add(light->position, offset3d);
-
-		t_vec3 to_perturbed = vec3_sub(perturbed_light, point);
-		double light_dist = vec3_length(to_perturbed);
-		t_vec3 dir = vec3_normalize(to_perturbed);
-
-		t_ray shadow_ray = create_ray(vec3_add(point, vec3_scale(dir, 1e-4)), dir);
-		double t;
-
-		bool in_shadow = false;
-
-		// Проверка на пересечение с любым объектом
-		for (t_sphere *sp = scene->spheres; sp; sp = sp->next)
-			if (intersect_sphere(shadow_ray, sp, &t) && t > 1e-4 && t < light_dist)
-				in_shadow = true;
-		for (t_plane *pl = scene->planes; pl; pl = pl->next)
-			if (intersect_plane(shadow_ray, pl, &t) && t > 1e-4 && t < light_dist)
-				in_shadow = true;
-		for (t_cylinder *cy = scene->cylinders; cy; cy = cy->next)
-			if (intersect_cylinder(shadow_ray, cy, &t) && t > 1e-4 && t < light_dist)
-				in_shadow = true;
-
-		if (in_shadow)
-			blocked++;
-	}
-
-	return 1.0 - ((double)blocked / samples); // 1.0 — полностью освещён, 0.0 — полностью в тени
+	(void)specular;
+	(void)camera_pos;
+	return (compute_lighting_internal(hit_point, normal, obj_color, scene));
 }
-
-t_vec3 random_in_unit_disk(void)
-{
-	t_vec3 p;
-	do {
-		p.x = ((double)rand() / RAND_MAX) * 2.0 - 1.0;
-		p.y = ((double)rand() / RAND_MAX) * 2.0 - 1.0;
-		p.z = 0;
-	} while (vec3_dot(p, p) >= 1.0);
-	return p;
-}
-

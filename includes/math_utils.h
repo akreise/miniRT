@@ -6,7 +6,7 @@
 /*   By: pshcherb <pshcherb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 10:56:28 by pshcherb          #+#    #+#             */
-/*   Updated: 2025/08/05 23:51:14 by pshcherb         ###   ########.fr       */
+/*   Updated: 2025/08/23 16:43:41 by pshcherb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,23 +16,24 @@
 # include "parser.h"
 # include <stdbool.h>
 
-typedef struct	s_ray {
+typedef struct s_ray
+{
 	t_vec3	origin;
 	t_vec3	direction;
-} t_ray;
+}	t_ray;
 
 typedef struct s_sphere_i
 {
-	t_vec3  oc;
-	double  a;
-	double  b;
-	double  c;
-	double 	discriminant;
-	double 	sqrt_d;
-	double 	t0;
-	double 	t1;
+	t_vec3	oc;
+	double	a;
+	double	b;
+	double	c;
+	double	discriminant;
+	double	sqrt_d;
+	double	t0;
+	double	t1;
 	bool	valid;
-} t_sphere_i;
+}	t_sphere_i;
 
 typedef struct s_plane_i
 {
@@ -42,7 +43,8 @@ typedef struct s_plane_i
 	bool	valid;
 }	t_plane_i;
 
-typedef struct s_cyl_i {
+typedef struct s_cyl_i
+{
 	t_vec3	oc;
 	t_vec3	d_proj;
 	t_vec3	oc_proj;
@@ -55,11 +57,20 @@ typedef struct s_cyl_i {
 	bool	valid;
 }	t_cyl_i;
 
-typedef struct s_triangle_i {
-	t_vec3 edge1, edge2, h, s, q;
-	double a, f, u, v, t;
-	bool valid;
-} t_triangle_i;
+typedef struct s_triangle_i
+{
+	t_vec3	edge1;
+	t_vec3	edge2;
+	t_vec3	h;
+	t_vec3	s;
+	t_vec3	q;
+	double	a;
+	double	f;
+	double	u;
+	double	v;
+	double	t;
+	bool	valid;
+}	t_triangle_i;
 
 // vec3_add_sub.c
 t_vec3	vec3_add(t_vec3 a, t_vec3 b);
@@ -78,18 +89,18 @@ t_ray	create_ray(t_vec3 origin, t_vec3 direction);
 t_vec3	ray_at(t_ray ray, double t);
 
 // intersect_plane.c
-bool    intersect_plane(t_ray ray, t_plane *plane, double *t);
+bool	intersect_plane(t_ray ray, t_plane *plane, double *t);
 
 // intersect_sphere.c
-bool    intersect_sphere(t_ray ray, t_sphere *sphere, double *t);
+bool	intersect_sphere(t_ray ray, t_sphere *sphere, double *t);
 
 // intercect_cylinder.c
-bool 	intersect_cylinder(t_ray ray, t_cylinder *cylinder, double *t);
+bool	intersect_cylinder(t_ray ray, t_cylinder *cylinder, double *t);
 
-bool intersect_triangle(t_ray ray, t_triangle *tri, double *t_out);
+bool	intersect_triangle(t_ray ray, t_triangle *tri, double *t_out);
 
 // intersect_utils.c
 bool	min_pos(double t0, double t1, double *t);
-t_vec3 	reflect(t_vec3 incident, t_vec3 normal);
+t_vec3	reflect(t_vec3 incident, t_vec3 normal);
 
 #endif

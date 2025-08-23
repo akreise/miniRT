@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: akreise <akreise@student.42.fr>            +#+  +:+       +#+        */
+/*   By: pshcherb <pshcherb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 10:56:06 by pshcherb          #+#    #+#             */
-/*   Updated: 2025/08/13 14:07:24 by akreise          ###   ########.fr       */
+/*   Updated: 2025/08/23 16:48:11 by pshcherb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,33 +21,33 @@
 # include <unistd.h>
 # include <math.h>
 
-typedef struct s_app t_app;
+typedef struct s_app	t_app;
 // read_rt_file.c
 void	read_rt_file(const char *filename, t_app *app);
 void	process_line(char *line, t_app *app);
 void	replace_tabs_with_spaces(char *line);
 
 // id_element.c
-int     id_element(char **tokens, t_scene *scene);
-int     parse_ambient(char **tokens, t_scene *scene);
-int     parse_objects(char **tokens, t_scene *scene);
+int		id_element(char **tokens, t_scene *scene);
+int		parse_ambient(char **tokens, t_scene *scene);
+int		parse_objects(char **tokens, t_scene *scene);
 
 // parse_ambient.c
-int	    handle_ambient(char **tokens, t_scene *scene);
-int	    handle_camera(char **tokens, t_scene *scene);
-int	    handle_light(char **tokens, t_scene *scene);
+int		handle_ambient(char **tokens, t_scene *scene);
+int		handle_camera(char **tokens, t_scene *scene);
+int		handle_light(char **tokens, t_scene *scene);
 
 // parse_objects.c
-int	    handle_sphere(char **tokens, t_scene *scene);
-int	    handle_plane(char **tokens, t_scene *scene);
-int	    handle_cylinder(char **tokens, t_scene *scene);
-int     handle_triangle(char **tokens, t_scene *scene);
+int		handle_sphere(char **tokens, t_scene *scene);
+int		handle_plane(char **tokens, t_scene *scene);
+int		handle_cylinder(char **tokens, t_scene *scene);
+int		handle_triangle(char **tokens, t_scene *scene);
 
 // parsing_utils.c
 void	free_tokens(char **tokens);
-int     is_valid_color_value(int value);
-double 	vec3_length(t_vec3 vec);
-int     parse_color(char *str, t_color *color);
+int		is_valid_color_value(int value);
+double	vec3_length(t_vec3 vec);
+int		parse_color(char *str, t_color *color);
 t_vec3	parse_vec3(char *str);
 
-#endif 
+#endif

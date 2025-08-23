@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: akreise <akreise@student.42.fr>            +#+  +:+       +#+         #
+#    By: pshcherb <pshcherb@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/06 10:54:27 by pshcherb          #+#    #+#              #
-#    Updated: 2025/08/11 21:01:39 by akreise          ###   ########.fr        #
+#    Updated: 2025/08/23 16:58:15 by pshcherb         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -59,7 +59,6 @@ SRC = \
 
 HEADERS = includes/math_utils.h \
 	includes/miniRT.h \
-	includes/mlx_wrapper.h \
 	includes/parser.h \
 	includes/render.h \
 	includes/scene.h 

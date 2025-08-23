@@ -1,5 +1,14 @@
 /* ************************************************************************** */
-/*                                                                            */
+/*          typedef struct s_scene
+{
+	t_ambient		*ambient;
+	t_camera		*camera;
+	t_light			*lights;
+	t_sphere		*spheres;
+	t_plane			*planes;
+	t_cylinder		*cylinders;
+	t_triangle		*triangles;
+}	t_scene;                                                         */
 /*                                                        :::      ::::::::   */
 /*   scene.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
@@ -13,76 +22,86 @@
 #ifndef SCENE_H
 # define SCENE_H
 
-typedef struct	s_vec3 {
+typedef struct s_vec3
+{
 	double	x;
 	double	y;
 	double	z;
-} t_vec3;
+}	t_vec3;
 
-typedef struct	s_color {
+typedef struct s_color
+{
 	int	r;
 	int	g;
 	int	b;
-} t_color;
+}	t_color;
 
-typedef struct  s_ambient {
-	double      	ratio;
-	t_color     	color;
-} t_ambient;
+typedef struct s_ambient
+{
+	double	ratio;
+	t_color	color;
+}	t_ambient;
 
-typedef struct  s_camera {
-	t_vec3      	position;
-	t_vec3      	orientation;
-	double      	fov;
-} t_camera;
+typedef struct s_camera
+{
+	t_vec3	position;
+	t_vec3	orientation;
+	double	fov;
+}	t_camera;
 
-typedef struct  s_light {
-	t_vec3      	position;
-	double      	brightness;
-	t_color     	color;
+typedef struct s_light
+{
+	t_vec3			position;
+	double			brightness;
+	t_color			color;
 	struct s_light	*next;
-} t_light;
+}	t_light;
 
-typedef struct  s_sphere {
-	t_vec3      	center;
-	double      	radius;
-	t_color     	color;
-	double 			reflectivity; // 0.0 — матовый, 1.0 — идеально зеркальный
-	double 			specular; // 0 — нет бликов, >0 — ярче и острее
-	struct s_sphere *next;
-} t_sphere;
+typedef struct s_sphere
+{
+	t_vec3			center;
+	double			radius;
+	t_color			color;
+	double			reflectivity;
+	double			specular;
+	struct s_sphere	*next;
+}	t_sphere;
 
-typedef struct 	s_plane {
-	t_vec3 			point;
-	t_vec3 			normal;
-	t_color 		color;
-	double 			reflectivity; // 0.0 — матовый, 1.0 — идеально зеркальный
-	double 			specular; // 0 — нет бликов, >0 — ярче и острее
-	struct s_plane *next;
-} t_plane;
+typedef struct s_plane
+{
+	t_vec3			point;
+	t_vec3			normal;
+	t_color			color;
+	double			reflectivity;
+	double			specular;
+	struct s_plane	*next;
+}	t_plane;
 
-typedef struct s_cylinder {
-	t_vec3 				base;
-	t_vec3 				direction;
-	double 				radius;
-	double 				height;
-	t_color 			color;
-	double 				reflectivity; // 0.0 — матовый, 1.0 — идеально зеркальный
-	double 				specular; // 0 — нет бликов, >0 — ярче и острее
-	struct s_cylinder 	*next;
-} t_cylinder;
+typedef struct s_cylinder
+{
+	t_vec3				base;
+	t_vec3				direction;
+	double				radius;
+	double				height;
+	t_color				color;
+	double				reflectivity;
+	double				specular;
+	struct s_cylinder	*next;
+}	t_cylinder;
 
-typedef struct s_triangle {
-	t_vec3 v0;
-	t_vec3 v1;
-	t_vec3 v2;
-	t_color color;
-	double reflectivity;
-	double specular;
-	struct s_triangle *next;
-} t_triangle;
+typedef struct s_triangle
+{
+	t_vec3				v0;
+	t_vec3				v1;
+	t_vec3				v2;
+	t_color				color;
+	double				reflectivity;
+	double				specular;
+	struct s_triangle	*next;
+}	t_triangle;
 
-typedef struct s_scene {
+typedef struct s_scene
+{
 	t_ambient	ambient;
 	t_camera	camera;
 	t_light		*lights;
@@ -90,9 +109,10 @@ typedef struct s_scene {
 	t_plane		*planes;
 	t_cylinder	*cylinders;
 	t_triangle	*triangles;
-} t_scene;
+}	t_scene;
 
-typedef struct s_image {
+typedef struct s_image
+{
 	void	*img;
 	char	*addr;
 	int		bpp;

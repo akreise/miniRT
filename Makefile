@@ -6,7 +6,7 @@
 #    By: pshcherb <pshcherb@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/06 10:54:27 by pshcherb          #+#    #+#              #
-#    Updated: 2025/08/23 18:36:50 by pshcherb         ###   ########.fr        #
+#    Updated: 2025/08/23 20:52:11 by pshcherb         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -51,6 +51,12 @@ SRC = \
 	src/scene/light/color_combine.c \
 	src/scene/light/lighting_calculation.c \
 	src/scene/light/trace_ray.c \
+	src/scene/light/trace_objects.c \
+	src/scene/light/trace_sphere_plane.c \
+	src/scene/light/shadow_utils.c \
+	src/scene/light/shadow_checks.c \
+	src/scene/light/shadow_factor.c \
+	src/scene/light/color_utils.c \
 	src/utils/intersect_utils.c \
 	src/utils/parsing_utils.c \
 	src/render/render.c \

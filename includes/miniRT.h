@@ -6,7 +6,7 @@
 /*   By: pshcherb <pshcherb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 10:55:51 by pshcherb          #+#    #+#             */
-/*   Updated: 2025/08/23 16:57:23 by pshcherb         ###   ########.fr       */
+/*   Updated: 2025/08/23 20:51:34 by pshcherb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,9 +27,12 @@ typedef struct s_light_c
 	t_color	diffuse_total;
 	t_light	*light;
 	t_vec3	light_dir;
+	t_vec3	normal;
 	double	dot;
 	double	intensity;
+	double	shadow;
 	t_color	diffuse;
+	t_scene	*scene;
 }	t_light_c;
 
 typedef struct s_mlx_data
@@ -56,6 +59,15 @@ t_color	compute_lighting(t_vec3 hit_point, t_vec3 normal,
 			t_vec3 camera_pos);
 double	shadow_factor(t_vec3 point, t_light *light, t_scene *scene);
 t_vec3	random_in_unit_disk(void);
+double	calculate_sample_shadow(t_vec3 point, t_light *light, t_scene *scene);
+bool	check_all_objects_shadow(t_scene *scene, t_ray shadow_ray,
+			double light_dist);
+bool	check_spheres_shadow(t_scene *scene, t_ray shadow_ray,
+			double light_dist);
+bool	check_planes_shadow(t_scene *scene, t_ray shadow_ray,
+			double light_dist);
+bool	check_cylinders_shadow(t_scene *scene, t_ray shadow_ray,
+			double light_dist);
 // trace_ray.c
 t_color	trace_ray(t_ray ray, t_scene *scene, int depth);
 void	trace_sphere(t_color *color, double *closest, t_ray ray,

@@ -6,12 +6,25 @@
 /*   By: pshcherb <pshcherb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/23 00:00:00 by pshcherb          #+#    #+#             */
-/*   Updated: 2025/08/23 20:30:22 by pshcherb         ###   ########.fr       */
+/*   Updated: 2025/08/23 20:51:46 by pshcherb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../includes/miniRT.h"
 #include "../../../includes/math_utils.h"
+
+static double	check_shadow_ray(t_vec3 point, t_vec3 to_perturbed,
+	double light_dist, t_scene *scene)
+{
+	t_vec3	dir;
+	t_ray	shadow_ray;
+
+	dir = vec3_normalize(to_perturbed);
+	shadow_ray = create_ray(vec3_add(point, vec3_scale(dir, 1e-4)), dir);
+	if (check_all_objects_shadow(scene, shadow_ray, light_dist))
+		return (1.0);
+	return (0.0);
+}
 
 double	calculate_sample_shadow(t_vec3 point, t_light *light, t_scene *scene)
 {
@@ -26,19 +39,6 @@ double	calculate_sample_shadow(t_vec3 point, t_light *light, t_scene *scene)
 	to_perturbed = vec3_sub(perturbed_light, point);
 	light_dist = vec3_length(to_perturbed);
 	return (check_shadow_ray(point, to_perturbed, light_dist, scene));
-}
-
-static double	check_shadow_ray(t_vec3 point, t_vec3 to_perturbed,
-	double light_dist, t_scene *scene)
-{
-	t_vec3	dir;
-	t_ray	shadow_ray;
-
-	dir = vec3_normalize(to_perturbed);
-	shadow_ray = create_ray(vec3_add(point, vec3_scale(dir, 1e-4)), dir);
-	if (check_all_objects_shadow(scene, shadow_ray, light_dist))
-		return (1.0);
-	return (0.0);
 }
 
 t_vec3	random_in_unit_disk(void)

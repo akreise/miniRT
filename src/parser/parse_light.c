@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parse_ambient.c                                    :+:      :+:    :+:   */
+/*   parse_light.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pshcherb <pshcherb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -14,19 +14,41 @@
 #include "../../includes/miniRT.h"
 #include "../../includes/math_utils.h"
 
-int	handle_ambient(char **tokens, t_scene *scene)
+static int	validate_light_params(char **tokens, t_light *light)
 {
-	double	ratio;
-	t_color	color;
-
-	if (get_ambient_count(0) > 1)
+	if (!tokens[1] || !tokens[2] || !tokens[3])
+		return (ft_printf("Error: Missing parameters for Light\n"), 0);
+	light->position = parse_vec3(tokens[1]);
+	light->brightness = ft_atof(tokens[2]);
+	if (!parse_color(tokens[3], &light->color))
+		return (0);
+	if (light->brightness < 0.0 || light->brightness > 1.0)
 	{
-		ft_printf("Error: Multiple ambient lights detected\n");
+		ft_printf("Error: Light brightness out of range [0.0, 1.0]: %f\n",
+			light->brightness);
 		return (0);
 	}
-	if (!validate_ambient_params(tokens, &ratio, &color))
+	return (1);
+}
+
+int	handle_light(char **tokens, t_scene *scene)
+{
+	t_light	*light;
+
+	if (get_light_count(0) > 1)
+	{
+		ft_printf("Error: Multiple lights detected\n");
 		return (0);
-	scene->ambient.ratio = ratio;
-	scene->ambient.color = color;
+	}
+	light = malloc(sizeof(t_light));
+	if (!light)
+		return (ft_printf("Error: Memory allocation failed for Light\n"), 0);
+	if (!validate_light_params(tokens, light))
+	{
+		free(light);
+		return (0);
+	}
+	light->next = scene->lights;
+	scene->lights = light;
 	return (1);
 }

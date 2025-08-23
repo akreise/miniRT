@@ -21,6 +21,7 @@ void	read_rt_file(const char *filename, t_app *app)
 	int		fd;
 	char	*line;
 
+	reset_element_counters();
 	fd = open(filename, O_RDONLY);
 	if (fd < 0)
 	{

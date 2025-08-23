@@ -47,6 +47,26 @@ int	check_required_elements(t_scene *scene)
 	return (1);
 }
 
+int	validate_single_elements(t_app *app)
+{
+	if (app->ambient_count != 1)
+	{
+		printf("Error: Scene must have exactly one ambient light (A)\n");
+		return (0);
+	}
+	if (app->camera_count != 1)
+	{
+		printf("Error: Scene must have exactly one camera (C)\n");
+		return (0);
+	}
+	if (app->light_count != 1)
+	{
+		printf("Error: Scene must have exactly one light (L)\n");
+		return (0);
+	}
+	return (1);
+}
+
 int	validate_parsed_scene(t_scene *scene)
 {
 	if (!check_required_elements(scene))

@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parse_ambient.c                                    :+:      :+:    :+:   */
+/*   parse_ambient_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pshcherb <pshcherb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -14,19 +14,60 @@
 #include "../../includes/miniRT.h"
 #include "../../includes/math_utils.h"
 
-int	handle_ambient(char **tokens, t_scene *scene)
+int	get_ambient_count(int reset)
 {
-	double	ratio;
-	t_color	color;
+	static int	count = 0;
 
-	if (get_ambient_count(0) > 1)
+	if (reset)
 	{
-		ft_printf("Error: Multiple ambient lights detected\n");
+		count = 0;
+		return (count);
+	}
+	return (++count);
+}
+
+int	get_camera_count(int reset)
+{
+	static int	count = 0;
+
+	if (reset)
+	{
+		count = 0;
+		return (count);
+	}
+	return (++count);
+}
+
+int	get_light_count(int reset)
+{
+	static int	count = 0;
+
+	if (reset)
+	{
+		count = 0;
+		return (count);
+	}
+	return (++count);
+}
+
+void	reset_element_counters(void)
+{
+	get_ambient_count(1);
+	get_camera_count(1);
+	get_light_count(1);
+}
+
+int	validate_ambient_params(char **tokens, double *ratio, t_color *color)
+{
+	if (!tokens[1] || !tokens[2])
+		return (ft_printf("Error: Missing parameters for Ambient light\n"), 0);
+	*ratio = ft_atof(tokens[1]);
+	if (*ratio < 0.0 || *ratio > 1.0)
+	{
+		ft_printf("Error: Ambient light ratio out of range [0.0, 1.0]\n");
 		return (0);
 	}
-	if (!validate_ambient_params(tokens, &ratio, &color))
+	if (!parse_color(tokens[2], color))
 		return (0);
-	scene->ambient.ratio = ratio;
-	scene->ambient.color = color;
 	return (1);
 }

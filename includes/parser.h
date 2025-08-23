@@ -34,8 +34,19 @@ int		parse_objects(char **tokens, t_scene *scene);
 
 // parse_ambient.c
 int		handle_ambient(char **tokens, t_scene *scene);
+
+// parse_camera.c 
 int		handle_camera(char **tokens, t_scene *scene);
+
+// parse_light.c
 int		handle_light(char **tokens, t_scene *scene);
+
+// parse_ambient_utils.c
+void	reset_element_counters(void);
+int		get_ambient_count(int reset);
+int		get_camera_count(int reset);
+int		get_light_count(int reset);
+int		validate_ambient_params(char **tokens, double *ratio, t_color *color);
 
 // parse_objects.c
 int		handle_sphere(char **tokens, t_scene *scene);

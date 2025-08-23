@@ -39,6 +39,9 @@ SRC = \
 	src/parser/parse_objects.c \
 	src/parser/parse_cylinder.c \
 	src/parser/parse_ambient.c \
+	src/parser/parse_ambient_utils.c \
+	src/parser/parse_camera.c \
+	src/parser/parse_light.c \
 	src/init/init_mlx.c \
 	src/math/vec3_add_sub.c \
 	src/math/vec3_dot_cross.c \

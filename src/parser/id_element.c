@@ -21,6 +21,11 @@ int	id_element(char **tokens, t_scene *scene)
 		return (1);
 	if (parse_objects(tokens, scene))
 		return (1);
+	if (ft_strlen(tokens[0]) > 0)
+	{
+		ft_printf("Error: Unknown element type '%s'\n", tokens[0]);
+		return (0);
+	}
 	return (0);
 }
 

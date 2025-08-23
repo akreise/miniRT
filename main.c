@@ -75,11 +75,22 @@ int main(int argc, char **argv)
 
     app.mlx_data.img = init_image(app.mlx_data.mlx_ptr);
 
-    // Init scene
+    // Init scene and counters
     initialize_scene(&app.scene);
+    app.ambient_count = 0;
+    app.camera_count = 0;
+    app.light_count = 0;
 
     // Парсим
     read_rt_file(argv[1], &app);
+
+    // Validate scene after parsing
+    if (!validate_parsed_scene(&app.scene))
+    {
+        printf("Error: Scene validation failed\n");
+        cleanup_and_exit(&app, 1);
+        return (1);
+    }
 
     // Рендер
     render_full_scene(&app);

@@ -46,6 +46,9 @@ typedef struct s_app
 {
 	t_mlx_data	mlx_data;
 	t_scene		scene;
+	int			ambient_count;
+	int			camera_count;
+	int			light_count;
 }	t_app;
 
 // color_combine.c

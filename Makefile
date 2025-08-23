@@ -60,8 +60,13 @@ SRC = \
 	src/utils/intersect_utils.c \
 	src/utils/parsing_utils.c \
 	src/render/render.c \
+	src/check/check.c \
+	src/check/check_utils.c \
+	src/check/check_elements.c \
+	src/check/check_lighting.c \
+	src/check/check_scene.c \
+	src/check/check_duplicates.c \
 	clean.c \
-	check.c \
 	main.c
 
 HEADERS = includes/math_utils.h \

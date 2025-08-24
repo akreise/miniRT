@@ -28,6 +28,10 @@ typedef struct s_light_c
 	t_light	*light;
 	t_vec3	light_dir;
 	t_vec3	normal;
+	t_vec3	hit_point;
+	t_vec3	view_dir;
+	t_color	obj_color;
+	double	specular;
 	double	dot;
 	double	intensity;
 	double	shadow;
@@ -51,15 +55,42 @@ typedef struct s_app
 	int			light_count;
 }	t_app;
 
+typedef struct s_trace_ctx
+{
+	t_color	*color;
+	double	*closest;
+	t_ray	ray;
+	t_scene	*scene;
+	int		depth;
+}	t_trace_ctx;
+
+typedef struct s_lighting_ctx
+{
+	t_vec3	hit_point;
+	t_vec3	normal;
+	t_color	obj_color;
+	double	specular;
+	t_scene	*scene;
+	t_vec3	camera_pos;
+}	t_lighting_ctx;
+
+typedef struct s_reflection_ctx
+{
+	t_ray	ray;
+	t_vec3	hit_point;
+	t_vec3	normal;
+	double	reflectivity;
+	t_scene	*scene;
+	int		depth;
+}	t_reflection_ctx;
+
 // color_combine.c
 t_color	color_scale(t_color color, double factor);
 t_color	color_add(t_color a, t_color b);
 t_color	color_mul(t_color a, t_color b);
 
 // lightning_calculations.c
-t_color	compute_lighting(t_vec3 hit_point, t_vec3 normal,
-			t_color obj_color, double specular, t_scene *scene,
-			t_vec3 camera_pos);
+t_color	compute_lighting(t_lighting_ctx *ctx);
 double	shadow_factor(t_vec3 point, t_light *light, t_scene *scene);
 t_vec3	random_in_unit_disk(void);
 double	calculate_sample_shadow(t_vec3 point, t_light *light, t_scene *scene);
@@ -73,12 +104,9 @@ bool	check_cylinders_shadow(t_scene *scene, t_ray shadow_ray,
 			double light_dist);
 // trace_ray.c
 t_color	trace_ray(t_ray ray, t_scene *scene, int depth);
-void	trace_sphere(t_color *color, double *closest, t_ray ray,
-			t_scene *scene, int depth);
-void	trace_plane(t_color *color, double *closest, t_ray ray,
-			t_scene *scene, int depth);
-void	trace_cylinder(t_color *color, double *closest, t_ray ray,
-			t_scene *scene, int depth);
+void	trace_sphere(t_trace_ctx *ctx);
+void	trace_plane(t_trace_ctx *ctx);
+void	trace_cylinder(t_trace_ctx *ctx);
 t_vec3	get_cylinder_normal(t_cylinder *cy, t_vec3 hit);
 t_color	color_blend(t_color c1, t_color c2, double factor);
 t_color	trace_ray_recursive(t_ray ray, t_scene *scene, int depth);

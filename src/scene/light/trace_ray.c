@@ -38,15 +38,17 @@ static t_color	color_black(void)
 
 t_color	trace_ray(t_ray ray, t_scene *scene, int depth)
 {
-	t_color	color;
-	double	closest;
+	t_color		color;
+	double		closest;
+	t_trace_ctx	ctx;
 
 	if (depth > MAX_DEPTH)
 		return (color_black());
 	color = color_black();
 	closest = INFINITY;
-	trace_sphere(&color, &closest, ray, scene, depth);
-	trace_cylinder(&color, &closest, ray, scene, depth);
-	trace_plane(&color, &closest, ray, scene, depth);
+	ctx = (t_trace_ctx){&color, &closest, ray, scene, depth};
+	trace_sphere(&ctx);
+	trace_cylinder(&ctx);
+	trace_plane(&ctx);
 	return (color);
 }

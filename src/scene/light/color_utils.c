@@ -25,15 +25,17 @@ t_color	color_blend(t_color c1, t_color c2, double factor)
 
 t_color	trace_ray_recursive(t_ray ray, t_scene *scene, int depth)
 {
-	t_color	color;
-	double	closest;
+	t_color		color;
+	double		closest;
+	t_trace_ctx	ctx;
 
 	if (depth <= 0)
 		return ((t_color){0, 0, 0});
 	color = (t_color){0, 0, 0};
 	closest = 1e30;
-	trace_sphere(&color, &closest, ray, scene, depth - 1);
-	trace_plane(&color, &closest, ray, scene, depth - 1);
-	trace_cylinder(&color, &closest, ray, scene, depth - 1);
+	ctx = (t_trace_ctx){&color, &closest, ray, scene, depth - 1};
+	trace_sphere(&ctx);
+	trace_plane(&ctx);
+	trace_cylinder(&ctx);
 	return (color);
 }

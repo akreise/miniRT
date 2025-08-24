@@ -39,42 +39,45 @@ static t_color	calculate_specular(t_light_c *lc, t_vec3 view_dir,
 	return (color_scale(lc->light->color, intensity));
 }
 
-static t_color	calculate_light_contribution(t_light_c *lc, t_vec3 hit_point,
-	t_vec3 normal, t_color obj_color, double specular, t_vec3 view_dir)
+static t_color	calculate_light_contribution(t_light_c *lc)
 {
 	t_color	result;
 	t_color	diffuse;
 	t_color	spec_color;
+	t_vec3	light_vec;
 
-	lc->light_dir = vec3_normalize(vec3_sub(lc->light->position, hit_point));
-	lc->dot = vec3_dot(normal, lc->light_dir);
-	lc->normal = normal;
+	light_vec = vec3_sub(lc->light->position, lc->hit_point);
+	lc->light_dir = vec3_normalize(light_vec);
+	lc->dot = vec3_dot(lc->normal, lc->light_dir);
 	result = (t_color){0, 0, 0};
 	if (lc->dot <= 0)
 		return (result);
-	lc->shadow = shadow_factor(hit_point, lc->light, lc->scene);
+	lc->shadow = shadow_factor(lc->hit_point, lc->light, lc->scene);
 	if (lc->shadow <= 0)
 		return (result);
 	lc->intensity = lc->light->brightness * lc->dot * lc->shadow;
-	diffuse = color_scale(obj_color, lc->intensity);
+	diffuse = color_scale(lc->obj_color, lc->intensity);
 	result = color_add(result, diffuse);
-	spec_color = calculate_specular(lc, view_dir, specular);
+	spec_color = calculate_specular(lc, lc->view_dir, lc->specular);
 	return (color_add(result, spec_color));
 }
 
-t_color	compute_lighting(t_vec3 hit_point, t_vec3 normal, t_color obj_color,
-	double specular, t_scene *scene, t_vec3 camera_pos)
+t_color	compute_lighting(t_lighting_ctx *ctx)
 {
 	t_light_c	lc;
 	t_color		light_contrib;
 	t_vec3		view_dir;
 
-	init_lighting_calc(&lc, obj_color, scene);
-	view_dir = vec3_normalize(vec3_sub(camera_pos, hit_point));
+	init_lighting_calc(&lc, ctx->obj_color, ctx->scene);
+	view_dir = vec3_normalize(vec3_sub(ctx->camera_pos, ctx->hit_point));
+	lc.hit_point = ctx->hit_point;
+	lc.normal = ctx->normal;
+	lc.obj_color = ctx->obj_color;
+	lc.specular = ctx->specular;
+	lc.view_dir = view_dir;
 	while (lc.light)
 	{
-		light_contrib = calculate_light_contribution(&lc, hit_point,
-				normal, obj_color, specular, view_dir);
+		light_contrib = calculate_light_contribution(&lc);
 		lc.diffuse_total = color_add(lc.diffuse_total, light_contrib);
 		lc.light = lc.light->next;
 	}
